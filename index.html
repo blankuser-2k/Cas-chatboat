@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAS Vattamkulam Chatbot</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ff9acb, #8ab6ff);
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
+    .input-box {
+        width: 80%;
+        max-width: 350px;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        outline: none;
+        font-size: 16px;
+        background: rgba(255,255,255,0.4);
+        color: #000;
+        transition: 0.3s;
+    }
+
+    .input-box:focus {
+        background: white;
+    }
+
+    .btn {
+        margin-top: 20px;
+        padding: 12px 25px;
+        background: #0056ff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #013bb5;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>WELCOME</h1>
+
+<input type="text" id="queryBox" class="input-box"
+       placeholder="What do you want to know about the college?" />
+
+<a href="chat.html">
+    <button class="btn">Chat</button>
+</a>
+
+<script>
+    const box = document.getElementById("queryBox");
+    box.addEventListener("focus", () => box.placeholder = "");
+    box.addEventListener("blur", () => {
+        box.placeholder = "What do you want to know about the college?";
+    });
+</script>
+
+</body>
+</html>
