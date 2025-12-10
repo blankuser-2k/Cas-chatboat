@@ -1,4 +1,4 @@
-              <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -90,7 +90,10 @@
         <button class="suggest-btn" data-query="address">Address</button>
         <button class="suggest-btn" data-query="courses">Courses</button>
         <button class="suggest-btn" data-query="contact">Contact</button>
-        <button class="suggest-btn" data-query="more">More</button>
+        <button class="suggest-btn" data-query="admission">Admission</button>
+        <button class="suggest-btn" data-query="fees">Fees</button>
+        <button class="suggest-btn" data-query="labs">Labs & Facilities</button>
+        <button class="suggest-btn" data-query="scholarship">Scholarship</button>
       </div>
 
       <div id="chatbox" role="log" aria-live="polite"></div>
@@ -102,12 +105,11 @@
     </div>
   </div>
 
-  <!-- Inline script included so chat works even if external script not loaded -->
   <script>
-    // Knowledge base
+    // Knowledge base with all details
     const knowledge = [
       { q: ["time","timing","hours"], a: "College time is 9:30 AM to 3:45 PM." },
-      { q: ["address","location","where","address:"], a:
+      { q: ["address","location","where"], a:
           "College Address: The Principal, College of Applied Science, Vattamkulam, Nellissery, Sukapuram (P.O.), Edappal, Malappuram, Kerala, PIN - 679576." },
       { q: ["phone","contact","telephone"], a: "Phone: 0494 2689655" },
       { q: ["email","mail"], a: "Email: casvattamkulam@ihrd.ac.in" },
@@ -115,6 +117,24 @@
           "Courses: B.Sc (Computer Science), B.Sc (Electronics), BCA, B.Com with Computer Application, M.Sc (Computer Science), M.Com (Finance)." },
       { q: ["about","more","information","established"], a:
           "CAS Vattamkulam was established in 2005 by IHRD. Affiliated to University of Calicut. Located ~3 km from Edappal and offers UG & PG programs." },
+      { q: ["cas","what is cas","cas meaning"], a:
+          "CAS stands for College of Applied Science, Vattamkulam." },
+      { q: ["affiliation","university","calicut university"], a:
+          "The college is affiliated by Calicut University." },
+      { q: ["admission"], a:
+          "Admission details can be obtained from the college. Contact: Phone 0494 2689655 | Email: casvattamkulam@ihrd.ac.in" },
+      { q: ["fee","fees","fee structure"], a:
+          "Fee structure depends on the course. Please contact the college at Phone: 0494 2689655 or Email: casvattamkulam@ihrd.ac.in." },
+      { q: ["scholarship","scholarships"], a:
+          "Scholarships are available for eligible students." },
+      { q: ["seminar hall"], a:
+          "The college has a seminar hall to conduct seminars." },
+      { q: ["computer lab","electronics lab","library","labs","facilities"], a:
+          "The college has Computer Lab, Electronics Lab, Library, Fitness Program, NSS, Canteen, Career Guidance Cell, Placement Cell, Boomitresena Club, and ED Club to encourage entrepreneurship." },
+      { q: ["exams","syllabus","exam"], a:
+          "Exams and syllabus are provided and conducted by Calicut University." },
+      { q: ["more info","tell me more","any more"], a:
+          "Ask me if you want to know any more about the college." }
     ];
 
     function escapeHtml(str) {
@@ -145,7 +165,7 @@
           if (lower.includes(k)) return item.a;
         }
       }
-      return null;
+      return "I understand what you asked. Please contact the college: Phone 0494 2689655 | Email: casvattamkulam@ihrd.ac.in";
     }
 
     function showTyping() {
@@ -174,18 +194,15 @@
       tNode.remove();
 
       const answer = findAnswer(text);
-      if (answer) appendBubble("bot", escapeHtml(answer));
-      else appendBubble("bot", escapeHtml("Sorry, I don't understand. Ask about timing, courses, address, phone or email."));
+      appendBubble("bot", escapeHtml(answer));
     }
 
     function sendMessage() { sendMessageWithText(userInput.value.trim()); }
 
-    // attach suggestion buttons
     document.querySelectorAll(".suggest-btn").forEach(btn=>{
       btn.addEventListener("click", (e)=>{
         const q = e.currentTarget.getAttribute("data-query");
-        const map = { "timing":"timing", "address":"address", "courses":"courses", "contact":"contact", "more":"more" };
-        sendMessageWithText(map[q] || q);
+        sendMessageWithText(q);
       });
     });
 
@@ -193,7 +210,7 @@
     userInput.addEventListener("keydown", (e)=>{ if (e.key === "Enter") sendMessage(); });
 
     // initial greeting
-    appendBubble("bot", "Hello! I am the CAS chatbot — try suggestions or type your question (time, address, courses, contact).");
+    appendBubble("bot", "Hello! I am the CAS chatbot — try suggestions or type your question (time, address, courses, contact, admission, fees, labs, scholarship).");
   </script>
 </body>
-        </html>
+</html>
