@@ -1,216 +1,264 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CAS Chat — CAS Vattamkulam</title>
+<meta charset="UTF-8">
+<title>College Chatbot</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
 
-  <style>
-    :root{
-      --rose: #ff9acb;
-      --blue: #6ea8ff;
-      --accent-blue: #0b63ff;
-      --bot-green: #39ff14;
-      --black: #0b0b0b;
-      --glass: rgba(255,255,255,0.85);
-      --input-bg: rgba(255,255,255,0.92);
-      --suggest-bg: rgba(255,255,255,0.95);
-      --suggest-border: rgba(11,63,136,0.06);
-    }
-    html,body { height:100%; margin:0; font-family:"Poppins",system-ui,Arial,sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    body{
-      background: linear-gradient(135deg, var(--rose) 0%, #ffd7e6 28%, #cfe7ff 72%, var(--blue) 100%);
-      display:flex; align-items:center; justify-content:center; padding:18px; box-sizing:border-box;
-    }
-    .container { width:100%; max-width:980px; height:92vh; display:flex; flex-direction:column; border-radius:18px; overflow:hidden;
-      box-shadow: 0 22px 50px rgba(16,24,40,0.18);
-      background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.6));
-      border: 1px solid rgba(255,255,255,0.22); }
-    header { display:flex; gap:14px; align-items:center; padding:14px 18px; background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); backdrop-filter: blur(4px); }
-    .logo { width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.8));
-      box-shadow: 0 6px 18px rgba(11,99,255,0.06); }
-    .logo .cas { font-family: "Abril Fatface", serif; color: var(--accent-blue); font-size:20px; line-height:1; }
-    .header-text { display:flex; flex-direction:column; }
-    .header-text .main { font-weight:600; font-size:18px; color:var(--black); }
-    .header-text .sub { font-size:12px; color:rgba(11,11,11,0.6); }
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  padding: 10px;
+}
 
-    .chat-area { flex:1; display:flex; flex-direction:column; padding:12px; gap:10px; box-sizing:border-box; }
-    #chatbox { flex:1; overflow:auto; padding:12px; display:flex; flex-direction:column; gap:10px; -webkit-overflow-scrolling:touch; }
+.chat-box {
+  background: white;
+  height: 480px;
+  overflow-y: auto;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 8px #aaa;
+}
 
-    .suggestions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:6px 4px; }
-    .suggest-btn { background: var(--suggest-bg); border:1px solid var(--suggest-border); padding:8px 12px; border-radius:999px; font-size:13px; cursor:pointer;
-      box-shadow: 0 6px 16px rgba(11,30,60,0.03); transition: transform .12s ease, box-shadow .12s ease; }
-    .suggest-btn:active { transform: translateY(1px); }
+.msg {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  width: fit-content;
+  max-width: 80%;
+}
 
-    .msg-row { display:flex; gap:8px; align-items:flex-end; }
-    .msg-row.you { justify-content:flex-end; }
-    .msg-row.bot { justify-content:flex-start; }
+.user {
+  background: #007bff;
+  color: white;
+  margin-left: auto;
+}
 
-    .bubble { display:inline-block; padding:12px 14px; max-width:78%; word-wrap:break-word; font-size:15px; line-height:1.3; border-radius:18px; box-shadow: 0 8px 24px rgba(11,30,60,0.06); }
-    .bubble.you { background: var(--accent-blue); color: #000; border-bottom-right-radius:6px; border-bottom-left-radius:18px; }
-    .bubble.bot { background: #000; color: var(--bot-green); border-bottom-left-radius:6px; border-bottom-right-radius:18px; }
+.bot {
+  background: #eaeaea;
+}
 
-    .input-wrap { padding:12px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.42)); display:flex; gap:10px; align-items:center; }
-    #userInput { flex:1; height:48px; padding:12px 18px; border-radius:28px 6px 28px 6px; border: none; outline:none; background: var(--input-bg); color: var(--black); font-size:15px; box-shadow: inset 0 2px 6px rgba(11,63,136,0.03); }
-    #userInput::placeholder { color: rgba(11,11,11,0.4); }
-    .send-btn { min-width:88px; height:44px; border-radius:12px; border:none; background: linear-gradient(90deg, var(--accent-blue), #0041d4); color: #fff; font-weight:600; cursor:pointer; box-shadow: 0 8px 20px rgba(11,63,136,0.12); }
+.input-area {
+  display: flex;
+  margin-top: 15px;
+}
 
-    .typing { display:inline-flex; gap:6px; align-items:center; padding:8px 10px; border-radius:12px; background: rgba(0,0,0,0.8); }
-    .dot { width:7px; height:7px; border-radius:50%; background: var(--bot-green); animation: blink 1s infinite; }
-    .dot:nth-child(2){ animation-delay:0.2s; } .dot:nth-child(3){ animation-delay:0.4s; }
-    @keyframes blink { 0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2} }
+input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-    @media (max-width:560px) {
-      .container { height:98vh; border-radius:12px; }
-      .logo { width:48px; height:48px; }
-      .bubble { font-size:14px; }
-      #userInput { height:44px; font-size:14px; }
-      .suggest-btn { font-size:12px; padding:7px 10px; }
-    }
-  </style>
+button {
+  margin-left: 10px;
+  padding: 12px 18px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* SUGGESTION BUTTONS */
+.suggestions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.suggestion-btn {
+  background: #ffffff;
+  width: 95px;
+  height: 95px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-shadow: 0 0 6px #ccc;
+  cursor: pointer;
+  font-size: 15px;
+}
+.suggestion-btn:hover {
+  background: #f0f0f0;
+}
+.suggestion-btn span {
+  font-size: 30px;
+}
+</style>
 </head>
+
 <body>
+<div class="container">
 
-  <div class="container" role="application" aria-label="CAS chatbot">
-    <header>
-      <div class="logo" aria-hidden="true"><div class="cas">CAS</div></div>
-      <div class="header-text">
-        <div class="main">CHATBOT - CAS</div>
-        <div class="sub">College of Applied Science, Vattamkulam</div>
-      </div>
-    </header>
+<h2>College Info Chatbot</h2>
 
-    <div class="chat-area">
-      <div class="suggestions" id="suggestions">
-        <button class="suggest-btn" data-query="timing">Time</button>
-        <button class="suggest-btn" data-query="address">Address</button>
-        <button class="suggest-btn" data-query="courses">Courses</button>
-        <button class="suggest-btn" data-query="contact">Contact</button>
-        <button class="suggest-btn" data-query="admission">Admission</button>
-        <button class="suggest-btn" data-query="fees">Fees</button>
-        <button class="suggest-btn" data-query="labs">Labs & Facilities</button>
-        <button class="suggest-btn" data-query="scholarship">Scholarship</button>
-      </div>
-
-      <div id="chatbox" role="log" aria-live="polite"></div>
-
-      <div class="input-wrap" aria-label="Message input">
-        <input id="userInput" type="text" placeholder="Type a question about the college..." aria-label="Type your question">
-        <button class="send-btn" id="sendBtn" aria-label="Send message">Send</button>
-      </div>
-    </div>
+<!-- Suggestion Buttons -->
+<div class="suggestions">
+  <div class="suggestion-btn" onclick="quickSend('departments')">
+    <span>🏫</span> Departments
   </div>
 
-  <script>
-    // Knowledge base with all details
-    const knowledge = [
-      { q: ["time","timing","hours"], a: "College time is 9:30 AM to 3:45 PM." },
-      { q: ["address","location","where"], a:
-          "College Address: The Principal, College of Applied Science, Vattamkulam, Nellissery, Sukapuram (P.O.), Edappal, Malappuram, Kerala, PIN - 679576." },
-      { q: ["phone","contact","telephone"], a: "Phone: 0494 2689655" },
-      { q: ["email","mail"], a: "Email: casvattamkulam@ihrd.ac.in" },
-      { q: ["course","courses","what courses","available courses"], a:
-          "Courses: B.Sc (Computer Science), B.Sc (Electronics), BCA, B.Com with Computer Application, M.Sc (Computer Science), M.Com (Finance)." },
-      { q: ["about","more","information","established"], a:
-          "CAS Vattamkulam was established in 2005 by IHRD. Affiliated to University of Calicut. Located ~3 km from Edappal and offers UG & PG programs." },
-      { q: ["cas","what is cas","cas meaning"], a:
-          "CAS stands for College of Applied Science, Vattamkulam." },
-      { q: ["affiliation","university","calicut university"], a:
-          "The college is affiliated by Calicut University." },
-      { q: ["admission"], a:
-          "Admission details can be obtained from the college. Contact: Phone 0494 2689655 | Email: casvattamkulam@ihrd.ac.in" },
-      { q: ["fee","fees","fee structure"], a:
-          "Fee structure depends on the course. Please contact the college at Phone: 0494 2689655 or Email: casvattamkulam@ihrd.ac.in." },
-      { q: ["scholarship","scholarships"], a:
-          "Scholarships are available for eligible students." },
-      { q: ["seminar hall"], a:
-          "The college has a seminar hall to conduct seminars." },
-      { q: ["computer lab","electronics lab","library","labs","facilities"], a:
-          "The college has Computer Lab, Electronics Lab, Library, Fitness Program, NSS, Canteen, Career Guidance Cell, Placement Cell, Boomitresena Club, and ED Club to encourage entrepreneurship." },
-      { q: ["exams","syllabus","exam"], a:
-          "Exams and syllabus are provided and conducted by Calicut University." },
-      { q: ["more info","tell me more","any more"], a:
-          "Ask me if you want to know any more about the college." }
-    ];
+  <div class="suggestion-btn" onclick="quickSend('fees')">
+    <span>💰</span> Fees
+  </div>
 
-    function escapeHtml(str) {
-      return str.replace(/[&<>"'`=\/]/g, function(s) {
-        return ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","=":"&#x3D;","`":"&#x60;" })[s];
-      });
-    }
+  <div class="suggestion-btn" onclick="quickSend('admission')">
+    <span>📥</span> Admission
+  </div>
 
-    const chatbox = document.getElementById("chatbox");
-    const userInput = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
+  <div class="suggestion-btn" onclick="quickSend('clubs')">
+    <span>🎯</span> Clubs
+  </div>
 
-    function appendBubble(kind, textHtml) {
-      const row = document.createElement("div");
-      row.className = "msg-row " + (kind === "you" ? "you" : "bot");
-      const bubble = document.createElement("div");
-      bubble.className = "bubble " + (kind === "you" ? "you" : "bot");
-      bubble.innerHTML = textHtml;
-      row.appendChild(bubble);
-      chatbox.appendChild(row);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
+  <div class="suggestion-btn" onclick="quickSend('seats')">
+    <span>🪑</span> Seats
+  </div>
 
-    function findAnswer(text) {
-      const lower = text.toLowerCase();
-      for (const item of knowledge) {
-        for (const k of item.q) {
-          if (lower.includes(k)) return item.a;
-        }
-      }
-      return "I understand what you asked. Please contact the college: Phone 0494 2689655 | Email: casvattamkulam@ihrd.ac.in";
-    }
+  <div class="suggestion-btn" onclick="quickSend('contact')">
+    <span>☎️</span> Help
+  </div>
+</div>
 
-    function showTyping() {
-      const row = document.createElement("div");
-      row.className = "msg-row bot";
-      const wrap = document.createElement("div");
-      wrap.className = "typing";
-      const d1 = document.createElement("span"); d1.className = "dot";
-      const d2 = document.createElement("span"); d2.className = "dot";
-      const d3 = document.createElement("span"); d3.className = "dot";
-      wrap.appendChild(d1); wrap.appendChild(d2); wrap.appendChild(d3);
-      row.appendChild(wrap);
-      chatbox.appendChild(row);
-      chatbox.scrollTop = chatbox.scrollHeight;
-      return row;
-    }
+<!-- Chat Box -->
+<div class="chat-box" id="chatBox"></div>
 
-    async function sendMessageWithText(text) {
-      if (!text || !text.trim()) return;
-      appendBubble("you", escapeHtml(text));
-      userInput.value = "";
-      userInput.focus();
+<div class="input-area">
+  <input id="userInput" placeholder="Type a message..." oninput="autoSuggest()">
+  <button onclick="sendMessage()">Send</button>
+</div>
 
-      const tNode = showTyping();
-      await new Promise(r => setTimeout(r, 650));
-      tNode.remove();
+<!-- AUTO SUGGEST AREA -->
+<div id="suggestBox"></div>
 
-      const answer = findAnswer(text);
-      appendBubble("bot", escapeHtml(answer));
-    }
+</div>
 
-    function sendMessage() { sendMessageWithText(userInput.value.trim()); }
+<script>
+// ====================== DATA =======================
 
-    document.querySelectorAll(".suggest-btn").forEach(btn=>{
-      btn.addEventListener("click", (e)=>{
-        const q = e.currentTarget.getAttribute("data-query");
-        sendMessageWithText(q);
-      });
-    });
+const data = {
+  departments: "Departments:\n• Commerce\n• Computer Science\n• Electronics\n• General Department\n• Physical Education",
 
-    sendBtn.addEventListener("click", sendMessage);
-    userInput.addEventListener("keydown", (e)=>{ if (e.key === "Enter") sendMessage(); });
+  clubs: "Clubs & Activities:\nNSS, PTA, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Student Grievance and more.",
 
-    // initial greeting
-    appendBubble("bot", "Hello! I am the CAS chatbot — try suggestions or type your question (time, address, courses, contact, admission, fees, labs, scholarship).");
-  </script>
+  fees: "You can ask specific course fees like:\n• BCA fee\n• B.Com fee\n• BSc CS fee\n• MSc CS fee\n• M.Com fee",
+
+  bca: "BCA Fee per semester: ₹17,000 (excluding PTA & University fees).",
+  bcom: "B.Com (CA) Fee: ₹11,200 (excluding PTA & University fees).",
+  bsc: "B.Sc CS/Electronics Fee: ₹17,000 per semester.",
+  msc: "M.Sc Computer Science Fee: ₹22,500 per semester.",
+  mcom: "M.Com Fee: ₹20,525 per semester.",
+
+  ugadmission: "UG Admission:\n• Starts after +2 results\n• B.Sc CS - 36 seats\n• BCA - 24 seats\n• B.Sc Electronics - 36\n• B.Com - 60\n50% through Calicut University\n50% through IHRD portal",
+
+  pgadmission: "PG Admission:\n• MSc CS - 10 seats\n• M.Com - 15 seats\n• 50% University single window\n• 50% IHRD portal\nApply through: www.ihrdadmissions.org",
+
+  seats: "Seats:\nBCA - 24\nB.Sc CS - 36\nB.Sc Electronics - 36\nB.Com - 60",
+
+  contact: "For more details contact college office."
+};
+
+
+// ===================== CHATBOT ENGINE =======================
+
+function quickSend(text) {
+  document.getElementById("userInput").value = text;
+  sendMessage();
+}
+
+function autoSuggest() {
+  let input = document.getElementById("userInput").value.toLowerCase();
+  let box = document.getElementById("suggestBox");
+  box.innerHTML = "";
+
+  if (input.length < 2) return;
+
+  let matches = [];
+
+  if ("bca fee".includes(input)) matches.push("bca fee");
+  if ("bcom fee".includes(input)) matches.push("bcom fee");
+  if ("bsc fee".includes(input)) matches.push("bsc fee");
+  if ("msc fee".includes(input)) matches.push("msc fee");
+  if ("mcom fee".includes(input)) matches.push("mcom fee");
+  if ("pg admission".includes(input)) matches.push("pg admission");
+  if ("ug admission".includes(input)) matches.push("ug admission");
+  if ("departments".includes(input)) matches.push("departments");
+  if ("clubs".includes(input)) matches.push("clubs");
+  if ("fees".includes(input)) matches.push("fees");
+
+  matches.forEach(m => {
+    box.innerHTML += `<div style='padding:8px;background:#fff;margin-top:5px;border-radius:6px;
+                      box-shadow:0 0 4px #ccc;cursor:pointer'
+                      onclick="quickSend('${m}')">${m}</div>`;
+  });
+}
+
+function sendMessage() {
+  let input = document.getElementById("userInput");
+  let text = input.value.trim().toLowerCase();
+  if (text === "") return;
+
+  addMessage(text, "user");
+  input.value = "";
+  document.getElementById("suggestBox").innerHTML = "";
+
+  setTimeout(() => botReply(text), 300);
+}
+
+function addMessage(msg, type) {
+  let box = document.getElementById("chatBox");
+  let div = document.createElement("div");
+  div.className = `msg ${type}`;
+  div.innerText = msg;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function botReply(text) {
+
+  // Friendly replies
+  if (text.includes("hi") || text.includes("hello")) {
+    return addMessage("Hello! How can I help you today?", "bot");
+  }
+
+  if (text.includes("thank")) {
+    return addMessage("My pleasure! 😊", "bot");
+  }
+
+  if (text.includes("how are you")) {
+    return addMessage("I'm here and ready to help you with college information!", "bot");
+  }
+
+  // Specific fee replies
+  if (text.includes("bca") && text.includes("fee")) return addMessage(data.bca, "bot");
+  if (text.includes("b.com") || text.includes("bcom")) return addMessage(data.bcom, "bot");
+  if (text.includes("bsc") && text.includes("fee")) return addMessage(data.bsc, "bot");
+  if (text.includes("msc") && text.includes("fee")) return addMessage(data.msc, "bot");
+  if (text.includes("mcom") && text.includes("fee")) return addMessage(data.mcom, "bot");
+
+  // Admission replies
+  if (text.includes("pg admission")) return addMessage(data.pgadmission, "bot");
+  if (text.includes("ug admission")) return addMessage(data.ugadmission, "bot");
+  if (text.includes("admission")) return addMessage("You can ask: UG admission / PG admission", "bot");
+
+  // General replies
+  if (data[text]) return addMessage(data[text], "bot");
+
+  // Unknown question
+  addMessage("I understand your question, but this detail is not available. Please contact the college office for correct information.", "bot");
+}
+</script>
+
 </body>
-</html>
+      </html>
