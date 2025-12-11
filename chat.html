@@ -476,8 +476,73 @@ suggestGrid.querySelectorAll('.suggest').forEach(btn=>{
     sendFromInput();
   });
 });
-
-// autosuggest typing
+                                                                                                    // autosuggest typing
 input.addEventListener('input', ()=>{
   const v = input.value;
-  const items = getS
+  const items = getSuggestions(v);
+  if (!items.length){ suggestList.style.display='none'; suggestList.innerHTML=''; return; }
+  suggestList.style.display = 'block';
+  suggestList.innerHTML = '';
+  items.forEach(it=>{
+    const div = document.createElement('div');
+    div.className = 'suggest-item';
+    div.innerText = it;
+    div.onclick = ()=> {
+      input.value = it;
+      suggestList.style.display='none';
+      sendFromInput();
+    };
+    suggestList.appendChild(div);
+  });
+});
+
+// send on click or enter
+sendBtn.addEventListener('click', ()=> sendFromInput());
+input.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') sendFromInput(); });
+
+// send logic (append user, typing indicator, answer)
+async function sendFromInput(){
+  const text = input.value.trim();
+  if (!text) return;
+  appendUser(text);
+  input.value = '';
+  suggestList.style.display = 'none';
+
+  const typingNode = showTyping();
+  await new Promise(r=> setTimeout(r, 700)); // short delay
+  // remove typing indicator
+  typingNode.remove();
+
+  // find answer
+  const answer = findResponse(text);
+  appendBot(answer);
+}
+
+// convenience wrappers using previously defined functions
+function appendBot(text){
+  appendBotHTML(text);
+}
+function appendUser(text){
+  append('you', text);
+}
+// allow HTML for bot (line breaks and bold)
+function appendBotHTML(text){
+  const row = document.createElement('div');
+  row.className = 'msg-row bot';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble bot';
+  bubble.innerHTML = escapeHtml(text).replace(/\n/g,'<br>');
+  row.appendChild(bubble);
+  chatbox.appendChild(row);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+/* initial greeting */
+appendBotHTML("Hello! I am the CAS chatbot — ask about timings, courses, fees, admissions, departments or type a question like 'BCA fee' or 'PG admission'.");
+
+/* keep chat scrolled */
+window.addEventListener('load', ()=> chatbox.scrollTop = chatbox.scrollHeight);
+
+</script>
+</body>
+</html>
