@@ -5,213 +5,121 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CAS Chat — College of Applied Science, Vattamkulam</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --rose:#ff9acb;
-    --blue:#6ea8ff;
-    --accent-blue:#0b63ff;   /* user bubble bg */
-    --user-text:#000000;     /* black text for user bubble */
-    --bot-green:#39ff14;     /* bot text on black */
-    --bot-bg:#000000;
-    --glass: rgba(255,255,255,0.88);
-    --input-bg: rgba(255,255,255,0.95);
+    --rose: #ff9acb;
+    --blue: #6ea8ff;
+    --accent-blue: #0b63ff;        /* user bubble */
+    --user-text: #000000;          /* user text black */
+    --bot-bg: #000000;             /* bot bubble black */
+    --bot-green: #39ff14;          /* bot text green */
+    --glass: rgba(255,255,255,0.92);
+    --input-bg: rgba(255,255,255,0.96);
+    --suggest-grad: linear-gradient(135deg, #00ff99, #00aaff);
+    --suggest-text: #05264a;
   }
 
-  html,body{ height:100%; margin:0; font-family:"Poppins",system-ui,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  html,body { height:100%; margin:0; font-family:"Poppins",system-ui,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
   body{
     background: linear-gradient(135deg, var(--rose) 0%, #ffd7e6 30%, #cfe7ff 70%, var(--blue) 100%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:16px;
-    box-sizing:border-box;
+    display:flex; align-items:center; justify-content:center; padding:14px; box-sizing:border-box;
   }
 
-  /* main container */
+  /* container */
   .wrap{
     width:100%;
     max-width:980px;
     height:92vh;
-    background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.6));
+    display:flex; flex-direction:column;
     border-radius:16px;
     overflow:hidden;
-    box-shadow: 0 20px 60px rgba(8,20,40,0.2);
-    display:flex;
-    flex-direction:column;
+    box-shadow: 0 22px 50px rgba(8,20,40,0.18);
+    background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.65));
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   header{
     display:flex; gap:14px; align-items:center; padding:14px 18px;
     background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border-bottom: 1px solid rgba(0,0,0,0.03);
   }
-  .logo{
-    width:56px; height:56px; border-radius:12px;
-    display:flex; align-items:center; justify-content:center;
-    background: white;
-  }
+  .logo{ width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:white; }
   .logo .cas{ font-family:"Abril Fatface", serif; color:var(--accent-blue); font-size:20px; }
-  .head-text { display:flex; flex-direction:column; }
-  .head-text .title { font-weight:700; color:#060606; font-size:18px; }
-  .head-text .sub { font-size:12px; color:rgba(0,0,0,0.6); }
+  .head-text{ display:flex; flex-direction:column; }
+  .head-text .title{ font-weight:700; color:#060606; font-size:18px; }
+  .head-text .sub{ font-size:12px; color:rgba(0,0,0,0.6); }
 
-  /* body area */
-  .body{
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    height:100%;
-    box-sizing:border-box;
-  }
+  .body{ padding:12px; display:flex; flex-direction:column; gap:12px; height:100%; box-sizing:border-box; }
 
-  /* suggestion grid - large square buttons with emoji */
+  /* suggestion grid */
   .suggest-grid{
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap:10px;
-    align-items:stretch;
   }
   .suggest{
     background: white;
     border-radius:12px;
-    border:1px solid rgba(11,63,136,0.06);
-    box-shadow: 0 8px 24px rgba(11,30,60,0.04);
+    border: 1px solid rgba(11,63,136,0.06);
     min-height:96px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:6px;
-    cursor:pointer;
-    padding:8px;
-    transition: transform .12s ease, box-shadow .12s ease;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    cursor:pointer; padding:10px; transition: transform .12s ease, box-shadow .12s ease;
     text-align:center;
+    box-shadow: 0 8px 24px rgba(11,30,60,0.04);
   }
   .suggest .emoji{ font-size:28px; }
-  .suggest .label{ font-size:13px; color:#0b0b0b; }
-
+  .suggest .label{ font-size:13px; color:var(--suggest-text); font-weight:600; }
   .suggest:active{ transform: translateY(2px); }
 
   /* chat area */
-  #chatbox{
-    flex:1;
-    overflow:auto;
-    padding:10px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    -webkit-overflow-scrolling:touch;
-  }
+  #chatbox{ flex:1; overflow:auto; padding:12px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
 
   .msg-row{ display:flex; }
   .msg-row.bot{ justify-content:flex-start; }
   .msg-row.you{ justify-content:flex-end; }
 
   .bubble{
-    padding:12px 14px;
-    border-radius:18px;
-    max-width:78%;
-    word-wrap:break-word;
+    padding:12px 14px; border-radius:18px; max-width:78%; word-wrap:break-word; font-size:15px; line-height:1.35;
     box-shadow: 0 8px 26px rgba(11,30,60,0.06);
-    font-size:15px;
-    line-height:1.35;
-    white-space:pre-wrap; /* respect newlines in answers */
+    white-space: pre-wrap;
   }
-  .bubble.you{
-    background: var(--accent-blue);
-    color: var(--user-text);
-    border-bottom-right-radius:6px;
-    border-bottom-left-radius:18px;
-  }
-  .bubble.bot{
-    background: var(--bot-bg);
-    color: var(--bot-green);
-    border-bottom-left-radius:6px;
-    border-bottom-right-radius:18px;
-  }
+  .bubble.you{ background: var(--accent-blue); color: var(--user-text); border-bottom-right-radius:6px; border-bottom-left-radius:18px; }
+  .bubble.bot{ background: var(--bot-bg); color: var(--bot-green); border-bottom-left-radius:6px; border-bottom-right-radius:18px; }
 
-  /* typing indicator bubble */
-  .typing{
-    padding:8px 10px;
-    border-radius:12px;
-    background: rgba(0,0,0,0.85);
-    display:inline-flex;
-    gap:6px;
-    align-items:center;
-  }
-  .dot{
-    width:7px; height:7px; border-radius:50%; background:var(--bot-green); animation: blink 1s infinite;
-  }
-  .dot:nth-child(2){ animation-delay: .2s; }
-  .dot:nth-child(3){ animation-delay: .4s; }
+  /* typing indicator */
+  .typing{ padding:8px 10px; border-radius:12px; background: rgba(0,0,0,0.85); display:inline-flex; gap:6px; align-items:center; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--bot-green); animation: blink 1s infinite; }
+  .dot:nth-child(2){ animation-delay:.2s; } .dot:nth-child(3){ animation-delay:.4s; }
   @keyframes blink{ 0%{opacity:.2} 50%{opacity:1} 100%{opacity:.2} }
 
-  /* input area */
-  .input-area{
-    display:flex; gap:10px; align-items:center; padding:10px; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
-    border-top:1px solid rgba(0,0,0,0.03);
-  }
-  #userInput{
-    flex:1;
-    height:48px;
-    padding:12px 16px;
-    border-radius:28px 6px 28px 6px;
-    border:none;
-    outline:none;
-    background:var(--input-bg);
-    font-size:15px;
-  }
-  #userInput::placeholder{ color: rgba(0,0,0,0.35); }
-  .btn-send{
-    min-width:92px;
-    height:44px;
-    border-radius:10px;
-    border:none;
-    background: linear-gradient(90deg, var(--accent-blue), #0041d4);
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-  }
+  /* input */
+  .input-area{ display:flex; gap:10px; align-items:center; padding:10px; background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.44)); }
+  #userInput{ flex:1; height:48px; padding:12px 16px; border-radius:28px 6px 28px 6px; border:none; outline:none; background:var(--input-bg); font-size:15px; }
+  .btn-send{ min-width:92px; height:44px; border-radius:10px; border:none; cursor:pointer; font-weight:700; color:white;
+    background: var(--suggest-grad); box-shadow: 0 10px 26px rgba(0,160,200,0.12); }
 
-  /* autosuggest dropdown (when typing) */
-  .autosuggest{
-    position:relative;
-  }
-  .suggest-list{
-    position: absolute;
-    left:0;
-    right:0;
-    bottom:58px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    padding:8px;
-    background: rgba(255,255,255,0.98);
-    border-radius:10px;
-    box-shadow: 0 12px 40px rgba(11,30,60,0.08);
-    z-index: 30;
-  }
-  .suggest-item{
-    padding:8px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:14px;
-  }
-  .suggest-item:hover{ background:#f0f6ff; }
+  /* autosuggest dropdown */
+  .autosuggest-wrap{ position:relative; }
+  .suggest-list{ position:absolute; left:8px; right:8px; bottom:64px; display:flex; flex-direction:column; gap:8px; padding:10px; background:white; border-radius:10px; box-shadow:0 12px 40px rgba(11,30,60,0.08); z-index:45; }
+  .suggest-item{ padding:8px 10px; border-radius:8px; cursor:pointer; font-size:14px; color:#082a4a; font-weight:600; }
+  .suggest-item:hover{ background: #f0fbff; }
 
-  /* responsiveness */
+  /* suggestion button color change - gradient applied on actual button labels for color */
+  .suggest .label.small{ font-size:12px; color:#053052; }
+
   @media (max-width:720px){
     .wrap{ height:96vh; border-radius:12px; }
-    .suggest{ min-height:80px; }
-    #chatbox{ padding:8px; }
+    .suggest{ min-height:84px; }
+    .bubble{ font-size:14px; }
+    #userInput{ height:44px; font-size:14px; }
   }
 </style>
 </head>
 <body>
   <div class="wrap" role="application" aria-label="CAS chatbot">
     <header>
-      <div class="logo" aria-hidden="true"><div class="cas">CAS</div></div>
+      <div class="logo"><div class="cas">CAS</div></div>
       <div class="head-text">
         <div class="title">CHATBOT - CAS</div>
         <div class="sub">College of Applied Science, Vattamkulam</div>
@@ -219,7 +127,7 @@
     </header>
 
     <div class="body">
-      <!-- Suggestion grid -->
+      <!-- suggestion grid -->
       <div class="suggest-grid" id="suggestGrid" aria-hidden="false">
         <div class="suggest" data-q="timing"><div class="emoji">🕒</div><div class="label">Timing</div></div>
         <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
@@ -227,20 +135,20 @@
         <div class="suggest" data-q="fees"><div class="emoji">💰</div><div class="label">Fees</div></div>
         <div class="suggest" data-q="admission"><div class="emoji">📝</div><div class="label">Admission</div></div>
         <div class="suggest" data-q="departments"><div class="emoji">🏫</div><div class="label">Departments</div></div>
-        <div class="suggest" data-q="clubs"><div class="emoji">⚡</div><div class="label">Clubs</div></div>
+        <div class="suggest" data-q="clubs"><div class="emoji">⚡</div><div class="label">Clubs & Activities</div></div>
         <div class="suggest" data-q="contact"><div class="emoji">📞</div><div class="label">Contact</div></div>
         <div class="suggest" data-q="scholarship"><div class="emoji">🎁</div><div class="label">Scholarship</div></div>
         <div class="suggest" data-q="exams"><div class="emoji">📝</div><div class="label">Exams / Syllabus</div></div>
       </div>
 
-      <!-- Chat box -->
+      <!-- chat area -->
       <div id="chatbox" role="log" aria-live="polite"></div>
 
-      <!-- Input + autosuggest -->
-      <div style="position:relative;">
-        <div class="input-area autosuggest">
-          <input id="userInput" type="text" placeholder="Type a question (example: 'BCA fee', 'PG admission', 'What is CAS?')">
-          <button class="btn-send" id="sendBtn" aria-label="Send message">Send</button>
+      <!-- input + autosuggest -->
+      <div class="autosuggest-wrap">
+        <div class="input-area">
+          <input id="userInput" type="text" placeholder="Type a question (e.g. 'BCA fee', 'PG admission', 'What is CAS?')" autocomplete="off" />
+          <button class="btn-send" id="sendBtn" aria-label="Send">Send</button>
         </div>
         <div id="suggestList" class="suggest-list" style="display:none;"></div>
       </div>
@@ -249,48 +157,37 @@
 
 <script>
 /* ---------------------------
-  Data store (knowledge base)
---------------------------- */
+   Knowledge base & course fees
+----------------------------*/
 const KB = [
-  // Basic contact & identity
   { q: ["what is cas","cas means","cas meaning","cas"], a: "CAS stands for College of Applied Science, Vattamkulam." },
-  { q: ["address","location","where"], a: "College Address:\nThe Principal,\nCollege of Applied Science, Vattamkulam, Nellissery, Sukapuram (P.O.), Edappal, Malappuram, Kerala, PIN - 679576" },
+
+  { q: ["address","location","where"], a:
+    "College Address:\nThe Principal,\nCollege of Applied Science, Vattamkulam, Nellissery, Sukapuram (P.O.), Edappal, Malappuram, Kerala, PIN - 679576" },
+
   { q: ["phone","contact","telephone","call","office"], a: "Phone: 0494 2689655" },
   { q: ["email","mail"], a: "Email: casvattamkulam@ihrd.ac.in" },
 
-  // Time
-  { q: ["time","timing","hours","college time","when open","open"], a: "College time is 9:30 AM to 3:45 PM (Monday to Friday)." },
+  { q: ["time","timing","hours","college time"], a: "College time is 9:30 AM to 3:45 PM (Monday to Friday)." },
 
-  // Courses
   { q: ["courses","what courses","available courses"], a: "Courses offered:\n• B.Sc (Computer Science)\n• B.Sc (Electronics)\n• BCA\n• B.Com with Computer Application\n• M.Sc (Computer Science)\n• M.Com (Finance)" },
 
-  // Departments
   { q: ["departments","department","which departments"], a:
     "Departments:\n• Department of Commerce\n• Department of Computer Science\n• Department of Electronics\n• General Department\n• Department of Physical Education" },
 
-  // Clubs
   { q: ["clubs","activities","nss","pta","placement","women cell","anti-ragging","union","literary","grievance"],
-    a: "Clubs & Activities:\n• National Service Scheme (NSS)\n• Parent Teacher Association (PTA)\n• Placement Cell\n• Women Cell\n• Anti-Ragging Cell\n• College Union\n• Clubs & Associations (Boomitresena, ED Club)\n• Students Grievance Redressal\n• Literary Club" },
+    a: "Clubs & Activities:\n• National Service Scheme (NSS)\n• Parent Teacher Association (PTA)\n• Placement Cell\n• Women Cell\n• Anti-Ragging Cell\n• College Union\n• Boomitresena Club, ED Club\n• Students Grievance Redressal\n• Literary Club" },
 
-  // Facilities
   { q: ["facilities","labs","library","computer lab","electronics lab","seminar hall","canteen","fitness"],
-    a: "Facilities:\n• Computer lab\n• Electronics lab\n• Library\n• Seminar hall\n• Fitness Program\n• Canteen\n• Career Guidance Cell\n• Placement Cell\n• NCC/NSS & Clubs" },
+    a: "Facilities:\n• Computer lab\n• Electronics lab\n• Library\n• Seminar hall\n• Fitness Program\n• Canteen\n• Career Guidance Cell\n• Placement Cell" },
 
-  // Exams / syllabus
-  { q: ["exams","syllabus","exam","syllabus provided"],
-    a: "Exams & Syllabus: Provided and conducted by Calicut University." },
+  { q: ["exams","syllabus","exam"], a: "Exams & syllabus are provided and conducted by Calicut University." },
 
-  // Affiliation & about
-  { q: ["affiliation","calicut","calicut university","university"],
-    a: "Affiliation: The college is affiliated to Calicut University." },
+  { q: ["affiliation","calicut","calicut university","university"], a: "Affiliation: The college is affiliated to Calicut University." },
 
-  // Scholarships
-  { q: ["scholarship","scholarships"],
-    a: "Scholarships: Scholarships are available for eligible students. Contact the college office for details." },
+  { q: ["scholarship","scholarships"], a: "Scholarships are available for eligible students. Contact the college office for details." },
 
-  // Admission (combined summary)
-  { q: ["admission","how to apply","application","apply"],
-    a:
+  { q: ["admission","how to apply","apply"], a:
 `Admission summary:
 UG Admission:
 • After +2 results.
@@ -299,15 +196,12 @@ UG Admission:
 
 PG Admission:
 • After UG results.
-• Seats: M.Sc Computer Science - 10; M.Com Finance - 15.
-• 50% University single-window; 50% IHRD portal (www.ihrdadmissions.org).` },
+• Seats: M.Sc CS - 10; M.Com Finance - 15.
+• 50% seats via Calicut University single-window; 50% via IHRD portal (www.ihrdadmissions.org).` },
 
-  // Fee general (prompt to ask specific)
-  { q: ["fee","fees","fee structure","fee details","fee structure per semester"],
-    a: "Fee structure depends on the course. Ask a specific course fee: e.g. 'BCA fee', 'B.Sc Computer Science fee', 'B.Com fee', 'M.Sc fee', 'M.Com fee'." }
+  { q: ["fee","fees","fee structure","fee details"], a: "Fee structure depends on the course. Ask a specific course fee: e.g. 'BCA fee', 'B.Sc Computer Science fee', 'B.Com fee', 'M.Sc fee', 'M.Com fee'." }
 ];
 
-// Specific course fee entries (exact replies)
 const COURSE_FEES = {
   "b.com": `B.Com (with Computer Application) — Per semester:
 • Tuition fee: ₹9,200
@@ -318,10 +212,9 @@ const COURSE_FEES = {
 → Semester fee: ₹9,900
 • Admission fee: ₹300
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹11,200
-(PTA & University affiliation fees not included)`,
+→ Total: ₹11,200 (PTA & University fees not included)`,
 
-  "b.sc cs": `B.Sc (Computer Science) — Per semester (revised):
+  "b.sc cs": `B.Sc (Computer Science) — Per semester:
 • Tuition fee: ₹14,900
 • Students Amenities fee: ₹250
 • Internet fee: ₹250
@@ -330,10 +223,9 @@ const COURSE_FEES = {
 → Semester fee: ₹15,700
 • Admission fee: ₹300
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹17,000
-(PTA & University affiliation fees not included)`,
+→ Total: ₹17,000 (PTA & University fees not included)`,
 
-  "b.sc electronics": `B.Sc (Electronics) — Per semester (revised):
+  "b.sc electronics": `B.Sc (Electronics) — Per semester:
 • Tuition fee: ₹14,900
 • Students Amenities fee: ₹250
 • Internet fee: ₹250
@@ -342,10 +234,9 @@ const COURSE_FEES = {
 → Semester fee: ₹15,700
 • Admission fee: ₹300
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹17,000
-(PTA & University affiliation fees not included)`,
+→ Total: ₹17,000 (PTA & University fees not included)`,
 
-  "bca": `BCA — Per semester (revised):
+  "bca": `BCA — Per semester:
 • Tuition fee: ₹14,900
 • Students Amenities fee: ₹250
 • Internet fee: ₹250
@@ -354,54 +245,78 @@ const COURSE_FEES = {
 → Semester fee: ₹15,700
 • Admission fee: ₹300
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹17,000
-(PTA & University affiliation fees not included)`,
+→ Total: ₹17,000 (PTA & University fees not included)`,
 
-  "msc": `M.Sc (Computer Science) — Per semester (revised):
+  "msc": `M.Sc (Computer Science) — Per semester:
 • Tuition fee: ₹19,000
 • Students Amenities fee: ₹1,500
 → Semester fee: ₹20,500
 • Admission fee: ₹1,000
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹22,500
-(PTA & University affiliation fees not included)`,
+→ Total: ₹22,500 (PTA & University fees not included)`,
 
   "mcom": `M.Com (Finance) — Per semester:
 • Tuition fee: ₹18,425
 • Admission fee: ₹1,100
 • Caution deposit (refundable): ₹1,000
-→ Total: ₹20,525
-(PTA & University affiliation fees not included)`
+→ Total: ₹20,525 (PTA & University fees not included)`
 };
 
 /* ---------------------------
-  Utilities & UI helpers
---------------------------- */
+   Helpers & UI
+----------------------------*/
 const chatbox = document.getElementById('chatbox');
 const input = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
 const suggestList = document.getElementById('suggestList');
 const suggestGrid = document.getElementById('suggestGrid');
 
-function appendMessage(kind, text){
+function append(kind, text){
   const row = document.createElement('div');
   row.className = 'msg-row ' + (kind === 'you' ? 'you' : 'bot');
-
   const bubble = document.createElement('div');
   bubble.className = 'bubble ' + (kind === 'you' ? 'you' : 'bot');
+  // allow limited HTML for bold, line breaks
   bubble.innerText = text;
-
+  // preserve new lines
+  bubble.innerText = text;
   row.appendChild(bubble);
   chatbox.appendChild(row);
   chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-/* typing indicator: returns node to remove later */
+/* show bot bubble with HTML-friendly rendering for line breaks and bold */
+function appendBot(text){
+  const row = document.createElement('div');
+  row.className = 'msg-row bot';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble bot';
+  // convert newlines to <br> and allow bold markers if present
+  const safe = escapeHtml(text).replace(/\n/g,'<br>');
+  bubble.innerHTML = safe;
+  row.appendChild(bubble);
+  chatbox.appendChild(row);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function appendUser(text){
+  const row = document.createElement('div');
+  row.className = 'msg-row you';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble you';
+  bubble.innerText = text;
+  row.appendChild(bubble);
+  chatbox.appendChild(row);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]); }
+
+/* typing indicator UI */
 function showTyping(){
   const row = document.createElement('div');
   row.className = 'msg-row bot';
-  const wrap = document.createElement('div');
-  wrap.className = 'typing';
+  const wrap = document.createElement('div'); wrap.className='typing';
   const d1 = document.createElement('span'); d1.className='dot';
   const d2 = document.createElement('span'); d2.className='dot';
   const d3 = document.createElement('span'); d3.className='dot';
@@ -412,95 +327,108 @@ function showTyping(){
   return row;
 }
 
-/* escape (basic) */
-function esc(s){ return String(s); }
-
-/* Lowercase normalized */
-function norm(s){ return (s||'').toLowerCase(); }
-
-/* find KB match - returns a or null */
-function findKBAnswer(text){
-  const t = norm(text);
+/* ---------------------------
+   Knowledge search & logic
+----------------------------*/
+function findResponse(text){
+  const t = text.trim().toLowerCase();
 
   // greetings
-  if (/\b(hi|hello|hey|hii|hey there|good morning|good evening)\b/.test(t)) {
-    return "Hello! How can I help you today? Try suggestions or ask a specific question like 'BCA fee' or 'PG admission'.";
+  if (/\b(hi|hello|hey|hii|hey there|good morning|good evening)\b/.test(t)){
+    return "Hello! How can I help you today? Try suggestions or ask something like 'BCA fee' or 'PG admission'.";
   }
   // thanks
   if (/\b(thank|thanks|thank you|tnx)\b/.test(t)){
     return "My pleasure! You're welcome 😊";
   }
-  // how are you - reply neutral helpful (not 'I am fine')
+  // how are you -> not "I'm fine"
   if (/\b(how are you|how r u|how r you)\b/.test(t)){
     return "I'm here and ready to help you with college information. How can I help?";
   }
 
-  // course-specific fee detection (priority)
-  // check for clear course keywords
+  // course-specific fee priority (user asked "BCA fee" or "BCA")
   if (/\bbca\b/.test(t) && t.includes('fee')) return COURSE_FEES['bca'];
-  if (/\bb\.?\s?com\b/.test(t) || /\bbcom\b/.test(t) && t.includes('fee')) return COURSE_FEES['b.com'];
-  if ((/\bb\.?sc\b/.test(t) || /\bbsc\b/.test(t) || t.includes('computer science')) && t.includes('fee')) return COURSE_FEES['b.sc cs'];
-  if ((/\bbsc\b/.test(t) || t.includes('electronics')) && t.includes('fee')) return COURSE_FEES['b.sc electronics'];
+  if (/\bb\.?com\b/.test(t) && t.includes('fee')) return COURSE_FEES['b.com'];
+  if ((/\bbsc\b/.test(t) || t.includes('computer science') || t.includes('b.sc')) && t.includes('fee')) {
+    // check electronics vs cs keywords
+    if (t.includes('elect') || t.includes('electronics')) return COURSE_FEES['b.sc electronics'];
+    return COURSE_FEES['b.sc cs'];
+  }
   if (/\bmsc\b/.test(t) && t.includes('fee')) return COURSE_FEES['msc'];
   if (/\bm\.?com\b/.test(t) && t.includes('fee')) return COURSE_FEES['mcom'];
 
-  // pg/ug admission specificity
-  if (/\b(pg admission|pg admissions|postgraduate admission|msc admission|m.com admission|pg apply)\b/.test(t)) {
-    return `PG Admission:\n• M.Sc Computer Science – 10 seats\n• M.Com Finance – 15 seats\nProcedure:\n• 50% seats via Calicut University single-window\n• 50% seats via IHRD Centralised Admission Portal (www.ihrdadmissions.org)\nApply in both if you choose IHRD quota.`;
+  // PG/UG specific admission
+  if (/\b(pg admission|pg admissions|postgraduate admission|msc admission|m.com admission|pg apply|m.sc admission)\b/.test(t)){
+    return `PG Admission:
+• M.Sc Computer Science – 10 seats
+• M.Com Finance – 15 seats
+
+Procedure:
+• 50% seats via Calicut University single-window
+• 50% seats via IHRD Centralised Admission Portal (www.ihrdadmissions.org)
+If you choose IHRD quota apply in both systems.`;
   }
-  if (/\b(ug admission|ug admissions|undergraduate admission|bca admission|b.sc admission|bcom admission)\b/.test(t)) {
-    return `UG Admission:\n• After +2 results.\n• Seats: B.Sc CS - 36; BCA - 24; B.Sc Electronics - 36; B.Com - 60.\n• 50% seats via Calicut University single-window; 50% via IHRD portal (www.ihrdadmissions.org).`;
+  if (/\b(ug admission|ug admissions|undergraduate admission|bca admission|b.sc admission|bcom admission)\b/.test(t)){
+    return `UG Admission:
+• After +2 results.
+• Seats: B.Sc CS - 36; BCA - 24; B.Sc Electronics - 36; B.Com - 60.
+• 50% seats via Calicut University single-window; 50% via IHRD portal (www.ihrdadmissions.org).`;
+  }
+  // if user types "admission" general
+  if (/\badmission\b/.test(t)) {
+    // return combined summary
+    return KB.find(i => i.q.includes('admission')).a;
   }
 
-  // exact course fee short queries without 'fee' but meaning fee
-  if (/\bbca\b/.test(t) && !t.includes('admission')) return COURSE_FEES['bca'];
+  // direct course names without 'fee' -> return fee as user wanted
+  if (/\bbca\b/.test(t)) return COURSE_FEES['bca'];
   if (/\bb\.?com\b/.test(t) || /\bbcom\b/.test(t)) return COURSE_FEES['b.com'];
-  if (/\bbsc\b/.test(t) && (t.includes('computer') || t.includes('cs') || t.includes('electronics'))) {
-    if (t.includes('electronics')) return COURSE_FEES['b.sc electronics'];
-    return COURSE_FEES['b.sc cs'];
-  }
+  if (/\bbsc\b/.test(t) && (t.includes('computer') || t.includes('cs'))) return COURSE_FEES['b.sc cs'];
+  if (/\bbsc\b/.test(t) && t.includes('elect')) return COURSE_FEES['b.sc electronics'];
   if (/\bmsc\b/.test(t)) return COURSE_FEES['msc'];
   if (/\bm\.?com\b/.test(t)) return COURSE_FEES['mcom'];
 
-  // search KB array
+  // search KB simple includes
   for (const item of KB){
     for (const key of item.q){
       if (t.includes(key)) return item.a;
     }
   }
 
-  // if asks about number of facilities / parking / specific unstored data -> contact fallback
-  if (/\b(parking|parking area|parking lot|hostel|transport|bus|wifi|wifi speed|canteen cost|canteen menu|number of facilities|facility count)\b/.test(t)){
-    return "I understand what you asked. Please contact the college for these specific details:\nPhone: 0494 2689655\nEmail: casvattamkulam@ihrd.ac.in";
+  // unknown but clearly specific (parking / hostel / menus etc.) -> direct contact fallback
+  if (/\b(parking|parking area|hostel|transport|bus|wifi|canteen|menu|facility count|how many facilities)\b/.test(t)){
+    return "I understand your question. Please contact the college for these specific details:\nPhone: 0494 2689655\nEmail: casvattamkulam@ihrd.ac.in";
   }
 
-  // final default fallback
+  // default fallback
   return "I understand your question but this detail is not in my data. Please contact the college office:\nPhone: 0494 2689655\nEmail: casvattamkulam@ihrd.ac.in";
 }
 
-/* Smart autosuggest: find relevant suggestion keywords from KB and COURSE_FEES */
-function getAutoSuggestions(prefix){
-  const t = norm(prefix);
-  if (!t || t.length < 2) return [];
+/* ---------------------------
+   Auto-suggest logic
+----------------------------*/
+function getSuggestions(prefix){
+  const p = prefix.trim().toLowerCase();
+  if (!p || p.length < 2) return [];
+
   const suggestions = new Set();
 
-  // course keys
-  const courseKeys = {
-    "BCA fee": ["bca"],
-    "B.Com fee": ["b.com","bcom","b com"],
-    "B.Sc CS fee": ["b.sc computer", "bsc cs", "computer science"],
-    "B.Sc Electronics fee": ["bsc electronics","electronics"],
-    "M.Sc fee": ["msc","m.sc"],
+  // course suggestions
+  const courseMap = {
+    "BCA fee": ["bca","bca fee"],
+    "B.Com fee": ["b.com","bcom","b com","b.com fee"],
+    "B.Sc CS fee": ["b.sc computer","bsc cs","computer science","b.sc cs"],
+    "B.Sc Electronics fee": ["electronics","b.sc electronics","bsc electronics"],
+    "M.Sc fee": ["msc","m.sc","m sc"],
     "M.Com fee": ["m.com","mcom"]
   };
-
-  for (const label in courseKeys){
-    for (const k of courseKeys[label]){
-      if (k.includes(t) || t.includes(k)) suggestions.add(label);
+  for (const label in courseMap){
+    for (const k of courseMap[label]){
+      if (k.includes(p) || p.includes(k) || label.toLowerCase().includes(p)) suggestions.add(label);
     }
   }
 
-  // KB keys - check keywords present
+  // quick keywords
   const quick = {
     "Timing":"time",
     "Address":"address",
@@ -510,49 +438,27 @@ function getAutoSuggestions(prefix){
     "Fees":"fee",
     "Admission":"admission",
     "PG admission":"pg admission",
+    "UG admission":"ug admission",
     "Contact":"contact",
-    "Scholarships":"scholarship",
+    "Scholarship":"scholarship",
     "Exams / syllabus":"exams"
   };
   for (const label in quick){
-    if (label.toLowerCase().includes(t) || quick[label].includes(t)) suggestions.add(label);
+    if (label.toLowerCase().includes(p) || quick[label].includes(p)) suggestions.add(label);
   }
 
   return Array.from(suggestions).slice(0,8);
 }
 
 /* ---------------------------
-  Event handlers & flow
---------------------------- */
+   UI events and main flow
+----------------------------*/
 
-function showSuggestionsList(items){
-  if (!items || items.length === 0){ suggestList.style.display = 'none'; suggestList.innerHTML = ''; return; }
-  suggestList.style.display = 'block';
-  suggestList.innerHTML = '';
-  items.forEach(i=>{
-    const it = document.createElement('div');
-    it.className = 'suggest-item';
-    it.innerText = i;
-    it.onclick = ()=> {
-      input.value = i;
-      suggestList.style.display = 'none';
-      sendFromInput();
-    };
-    suggestList.appendChild(it);
-  });
-}
-
-input.addEventListener('input', (e)=>{
-  const v = input.value.trim();
-  const suggestions = getAutoSuggestions(v);
-  showSuggestionsList(suggestions);
-});
-
-// clicking a big suggestion button
+// initialize suggestion click behavior
 suggestGrid.querySelectorAll('.suggest').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const q = btn.getAttribute('data-q');
-    // map q to user friendly text
+    // put friendly text into input and send immediately
     const map = {
       timing: 'timing',
       address: 'address',
@@ -560,4 +466,18 @@ suggestGrid.querySelectorAll('.suggest').forEach(btn=>{
       fees: 'fee',
       admission: 'admission',
       departments: 'departments',
-      club
+      clubs: 'clubs',
+      contact: 'contact',
+      scholarship: 'scholarship',
+      exams: 'exams'
+    };
+    const text = map[q] || q;
+    input.value = text;
+    sendFromInput();
+  });
+});
+
+// autosuggest typing
+input.addEventListener('input', ()=>{
+  const v = input.value;
+  const items = getS
