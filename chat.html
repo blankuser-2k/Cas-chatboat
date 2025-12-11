@@ -135,7 +135,6 @@
     </header>
 
     <div class="body">
-      <!-- scrollable suggestion box for mobile -->
       <div class="scroll-suggest-box" id="scrollSuggest">
         <div class="suggest" data-q="timing">Timing</div>
         <div class="suggest" data-q="address">Address</div>
@@ -149,10 +148,8 @@
         <div class="suggest" data-q="exams">Exams / Syllabus</div>
       </div>
 
-      <!-- chat area -->
       <div id="chatbox" role="log" aria-live="polite"></div>
 
-      <!-- input + autosuggest -->
       <div class="autosuggest-wrap">
         <div class="input-area">
           <input id="userInput" type="text" placeholder="Type a question (e.g. 'BCA fee', 'PG admission', 'What is CAS?')" autocomplete="off" />
@@ -162,7 +159,6 @@
       </div>
     </div>
   </div>
-
 <script>
 const chatbox = document.getElementById('chatbox');
 const input = document.getElementById('userInput');
@@ -202,7 +198,8 @@ function showTyping(){
   chatbox.scrollTop=chatbox.scrollHeight;
   return row;
 }
-  /* ---------------------------
+
+/* ---------------------------
    Knowledge base & course fees
 ----------------------------*/
 const KB = [
@@ -276,10 +273,44 @@ function getSuggestions(prefix){
   const p=prefix.trim().toLowerCase();
   if(!p||p.length<2) return [];
   const suggestions=new Set();
-  const quick=["Timing","Address","Courses","Departments","Fees","Admission","PG admission","UG admission","Contact","Scholarship","Exams / syllabus"];
+  const quick=["Timing","Address","Courses","Departments","Fees","Admission","PG admission","UG admission","Contact","Scholarship","Exams / syllabus", "BCA fee", "B.Sc fee", "M.Com fee"];
   quick.forEach(q=>{ if(q.toLowerCase().includes(p)) suggestions.add(q); });
   return Array.from(suggestions).slice(0,8);
 }
+
+function displaySuggestions(){
+  const prefix=input.value.trim();
+  const suggestions=getSuggestions(prefix);
+  suggestList.innerHTML='';
+
+  if(suggestions.length===0 || prefix.length===0){
+    suggestList.style.display='none';
+    return;
+  }
+
+  suggestions.forEach(s=>{
+    const item=document.createElement('div');
+    item.className='suggest-item';
+    item.innerText=s;
+    item.addEventListener('click', ()=>{
+      input.value=s;
+      sendFromInput();
+    });
+    suggestList.appendChild(item);
+  });
+
+  suggestList.style.display='flex';
+}
+
+/* Add input event listener for real-time suggestions */
+input.addEventListener('input', displaySuggestions);
+/* Hide suggestions on focus change, unless clicking one */
+input.addEventListener('blur', ()=>{
+  // Add a small delay so that suggestion click has time to register
+  setTimeout(()=>suggestList.style.display='none', 200);
+});
+input.addEventListener('focus', displaySuggestions);
+
 
 /* scrollable suggestion click */
 scrollSuggest.querySelectorAll('.suggest').forEach(btn=>{
@@ -291,7 +322,7 @@ scrollSuggest.querySelectorAll('.suggest').forEach(btn=>{
 
 /* send button / enter */
 sendBtn.addEventListener('click', ()=> sendFromInput());
-input.addEventListener('keydown', e=>{ if(e.key==='Enter') sendFromInput(); });
+input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendFromInput(); } });
 
 async function sendFromInput(){
   const text=input.value.trim();
@@ -311,3 +342,5 @@ appendBotHTML("Hello! I am the CAS chatbot — ask about timings, courses, fees,
 </script>
 </body>
 </html>
+
+                                                       
