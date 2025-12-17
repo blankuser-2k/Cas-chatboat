@@ -218,7 +218,8 @@ function getReply(q){
   for(let k in db){
     if(q.includes(k)) return db[k];
   }
-  return "Sorry, I don't have that information. Try another keyword.";
+  return " I couldn’t find exact details for that request.
+Please ensure you entered the correct information or select Contact to get official details.";
 }
 
 /* SEND */
