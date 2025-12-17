@@ -2,290 +2,277 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>CAS Chatbot - College of Applied Science, Vattamkulam</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAS Chatbot - Vattamkulam</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #f43f5e, #2563eb);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{
+  margin:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.chat-container {
-  width: 95%;
-  max-width: 420px;
-  height: 95vh;
-  background: #fff;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.chat-container{
+  width:100%;
+  max-width:420px;
+  height:95vh;
+  background:#f5f7fb;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
 }
 
-header {
-  background: #111827;
-  color: #22c55e;
-  padding: 12px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
+/* HEADER */
+.header{
+  background:#0a58ca;
+  color:#fff;
+  padding:12px;
+  text-align:center;
+  font-weight:bold;
+}
+.header span{font-size:12px;display:block}
+
+/* SUGGEST GRID */
+.suggest-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:10px;
+}
+.suggest{
+  background:#e8f0ff;
+  border-radius:12px;
+  padding:10px 5px;
+  text-align:center;
+  cursor:pointer;
+}
+.suggest .emoji{font-size:20px}
+.suggest .label{font-size:11px}
+
+/* CHAT */
+#chatbox{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+}
+.msg{
+  max-width:80%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:12px;
+  line-height:1.4;
+}
+.user{
+  background:#0a58ca;
+  color:white;
+  margin-left:auto;
+}
+.bot{
+  background:#e0e0e0;
+  color:black;
 }
 
-.suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px;
-  background: #f1f5f9;
+/* INPUT AREA */
+.autosuggest-wrap{padding:8px;border-top:1px solid #ddd}
+.input-area{
+  display:flex;
+  gap:6px;
+}
+input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  border:none;
+  border-radius:8px;
+  padding:0 10px;
+  cursor:pointer;
+}
+.btn-send{background:#0a58ca;color:white}
+.btn-voice{background:#198754;color:white}
+
+/* AUTOSUGGEST */
+.suggest-list{
+  background:white;
+  border:1px solid #ccc;
+  border-radius:8px;
+  margin-top:5px;
+}
+.suggest-item{
+  padding:8px;
+  cursor:pointer;
+}
+.suggest-item:hover{background:#e8f0ff}
+
+/* VOICE BAR */
+.voice-wave{
+  height:4px;
+  background:linear-gradient(90deg,#000,#fff);
+  animation:move 1s linear infinite;
+  display:none;
+}
+@keyframes move{
+  from{background-position:0}
+  to{background-position:200px}
 }
 
-.suggest-btn {
-  flex: 1 1 45%;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #22c55e, #2563eb);
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
+/* VOLUME BUTTON */
+.volume-btn{
+  position:absolute;
+  bottom:90px;
+  right:15px;
+  background:black;
+  color:white;
+  padding:8px;
+  border-radius:50%;
+  cursor:pointer;
 }
-
-#chatbox {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.msg {
-  max-width: 80%;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.user {
-  background: #2563eb;
-  color: black;
-  margin-left: auto;
-}
-
-.bot {
-  background: black;
-  color: #22c55e;
-  margin-right: auto;
-}
-
-.input-area {
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  background: #e5e7eb;
-}
-
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-}
-
-button {
-  border: none;
-  cursor: pointer;
-}
-
-.send-btn {
-  background: #22c55e;
-  color: black;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-}
-
-.voice-btn {
-  background: #2563eb;
-  color: white;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-}
-
-#autoSuggest {
-  position: absolute;
-  bottom: 75px;
-  left: 10px;
-  right: 10px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,.2);
-  display: none;
-  z-index: 10;
-}
-
-.auto-item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-}
-
-.auto-item:hover {
-  background: #f1f5f9;
-}
-
-.speaker-btn {
-  position: fixed;
-  bottom: 140px;
-  right: 20px;
-  background: black;
-  color: white;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 20px;
-}
-
-.speaker-btn.active {
-  background: green;
-}
+.volume-btn.active{background:green}
 </style>
 </head>
 
 <body>
-
 <div class="chat-container">
-  <header>🤖 CHATBOT – CAS Vattamkulam</header>
 
-  <div class="suggestions">
-    <button class="suggest-btn" data-q="time">⏰ Time</button>
-    <button class="suggest-btn" data-q="address">📍 Address</button>
-    <button class="suggest-btn" data-q="courses">🎓 Courses</button>
-    <button class="suggest-btn" data-q="fees">💰 Fees</button>
-    <button class="suggest-btn" data-q="admission">📝 Admission</button>
-    <button class="suggest-btn" data-q="contact">📞 Contact</button>
-  </div>
-
-  <div id="chatbox"></div>
-
-  <div id="autoSuggest"></div>
-
-  <div class="input-area">
-    <input id="userInput" placeholder="Ask about CAS Vattamkulam...">
-    <button class="voice-btn" id="voiceBtn">🎤</button>
-    <button class="send-btn" id="sendBtn">➤</button>
-  </div>
+<div class="header">
+🤖 CAS Chatbot
+<span>College of Applied Science, Vattamkulam</span>
 </div>
 
-<button id="speakerBtn" class="speaker-btn">🔊</button>
-<script>
-const chatbox = document.getElementById("chatbox");
-const input = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
-const autoSuggest = document.getElementById("autoSuggest");
-const speakerBtn = document.getElementById("speakerBtn");
+<div class="suggest-grid" id="suggestGrid">
+  <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
+  <div class="suggest" data-q="courses"><div class="emoji">🎓</div><div class="label">Courses</div></div>
+  <div class="suggest" data-q="fees"><div class="emoji">💰</div><div class="label">Fees</div></div>
+  <div class="suggest" data-q="admission"><div class="emoji">📝</div><div class="label">Admission</div></div>
+  <div class="suggest" data-q="departments"><div class="emoji">🏫</div><div class="label">Departments</div></div>
+  <div class="suggest" data-q="clubs"><div class="emoji">⚡</div><div class="label">Clubs</div></div>
+  <div class="suggest" data-q="contact"><div class="emoji">📞</div><div class="label">Contact</div></div>
+  <div class="suggest" data-q="cas"><div class="emoji">ℹ️</div><div class="label">What is CAS</div></div>
+</div>
 
-let speakerOn = false;
+<div id="chatbox"></div>
+
+<div class="autosuggest-wrap">
+<div class="voice-wave" id="voiceWave"></div>
+
+<div class="input-area">
+<input id="userInput" placeholder="Type your question..." />
+<button class="btn-voice" id="voiceBtn">🎤</button>
+<button class="btn-send" id="sendBtn">Send</button>
+</div>
+
+<div id="suggestList" class="suggest-list" style="display:none"></div>
+</div>
+
+<div class="volume-btn" id="volumeBtn">🔊</div><script>
+const chatbox=document.getElementById("chatbox");
+const input=document.getElementById("userInput");
+const suggestList=document.getElementById("suggestList");
+const voiceWave=document.getElementById("voiceWave");
+let speakEnabled=false;
+let lastBotText="";
 
 /* DATABASE */
-const data = {
-  hi: "Hello! Welcome to College of Applied Science, Vattamkulam 😊",
-  cas: "CAS means College of Applied Science.",
-  time: "College time is 9:30 AM to 3:45 PM.",
-  address: "Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576.",
-  contact: "Phone: 0494-2689655 / 8547006802 | Email: casvattamkulam@ihrd.ac.in",
-  courses: "UG: BCA, B.Sc CS, B.Sc Electronics, B.Com. PG: M.Sc CS, M.Com Finance.",
-  bca: "BCA semester fee is ₹17,000. Seats: 24.",
-  fees: "Fees depend on course. Ask: BCA fee, B.Sc fee, M.Sc fee.",
-  nss: "NSS is part of Clubs & Activities along with PTA, Placement Cell, Women Cell.",
-  parking: "Yes, the college has parking facilities for students.",
-  admission: "50% seats via Calicut University, 50% via IHRD portal.",
-  pg: "PG courses: M.Sc Computer Science (10 seats), M.Com Finance (15 seats)."
+const db={
+  "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
+  "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
+  "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
+  "courses":"🎓 UG: BCA, B.Sc Computer Science, B.Sc Electronics, B.Com CA\n🎓 PG: M.Sc Computer Science, M.Com Finance",
+  "departments":"🏫 Computer Science, Commerce, Electronics, Physical Education, General Department",
+  "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Associations",
+  "fees":"💰 Fees depend on course. Type 'BCA fee', 'MSc fee' etc.",
+  "bca fee":"BCA total semester fee is ₹17,000 (excluding PTA & university fees)",
+  "msc fee":"M.Sc Computer Science total semester fee is ₹22,500",
+  "admission":"📝 Admissions through Calicut University Single Window & IHRD portal",
+  "pg admission":"PG admission after UG result publication",
+  "ug admission":"UG admission after +2 results",
+  "parking":"🚗 College has parking facilities for students and staff",
+  "library":"📚 College has a well-equipped library",
+  "nss":"NSS is active and part of student activities"
 };
 
-const keywords = Object.keys(data);
+const keywords=Object.keys(db);
 
 /* CHAT FUNCTIONS */
-function addMsg(text, cls) {
-  const div = document.createElement("div");
-  div.className = "msg " + cls;
-  div.innerText = text;
+function addMsg(text,cls){
+  const div=document.createElement("div");
+  div.className="msg "+cls;
+  div.innerText=text;
   chatbox.appendChild(div);
-  chatbox.scrollTop = chatbox.scrollHeight;
-  if (cls === "bot") speak(text);
+  chatbox.scrollTop=chatbox.scrollHeight;
+  if(cls==="bot"){
+    lastBotText=text;
+    if(speakEnabled) speak(text);
+  }
 }
 
-function botReply(msg) {
-  const key = keywords.find(k => msg.includes(k));
-  addMsg(key ? data[key] : "I understand your question. Please contact: 0494-2689655", "bot");
+function getReply(q){
+  q=q.toLowerCase();
+  for(let k in db){
+    if(q.includes(k)) return db[k];
+  }
+  return "Sorry, I don't have that information. Try another keyword.";
 }
 
 /* SEND */
-sendBtn.onclick = () => {
-  const msg = input.value.trim().toLowerCase();
-  if (!msg) return;
-  addMsg(msg, "user");
-  input.value = "";
-  autoSuggest.style.display = "none";
-  setTimeout(() => botReply(msg), 300);
+document.getElementById("sendBtn").onclick=()=>{
+  const text=input.value.trim();
+  if(!text) return;
+  addMsg(text,"user");
+  input.value="";
+  setTimeout(()=>addMsg(getReply(text),"bot"),400);
+  suggestList.style.display="none";
 };
 
-/* SUGGESTIONS */
-input.oninput = () => {
-  const val = input.value.toLowerCase();
-  autoSuggest.innerHTML = "";
-  if (val.length < 2) {
-    autoSuggest.style.display = "none";
-    return;
-  }
-  const matches = keywords.filter(k => k.startsWith(val));
-  matches.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "auto-item";
-    div.innerText = m;
-    div.onclick = () => {
-      input.value = m;
-      sendBtn.click();
-    };
-    autoSuggest.appendChild(div);
-  });
-  autoSuggest.style.display = matches.length ? "block" : "none";
-};
-
-/* QUICK BUTTONS */
-document.querySelectorAll(".suggest-btn").forEach(btn => {
-  btn.onclick = () => {
-    input.value = btn.dataset.q;
-    sendBtn.click();
-  };
+/* SUGGEST GRID */
+document.querySelectorAll(".suggest").forEach(s=>{
+  s.onclick=()=>{input.value=s.dataset.q;document.getElementById("sendBtn").click();}
 });
 
-/* VOICE INPUT */
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SR) {
-  const rec = new SR();
-  rec.lang = "en-IN";
-  document.getElementById("voiceBtn").onclick = () => rec.start();
-  rec.onresult = e => input.value = e.results[0][0].transcript;
-}
-
-/* SPEAKER */
-speakerBtn.onclick = () => {
-  speakerOn = !speakerOn;
-  speakerBtn.classList.toggle("active");
+/* AUTO SUGGEST */
+input.oninput=()=>{
+  const v=input.value.toLowerCase();
+  if(!v){suggestList.style.display="none";return;}
+  suggestList.innerHTML="";
+  keywords.filter(k=>k.includes(v)).forEach(k=>{
+    const d=document.createElement("div");
+    d.className="suggest-item";
+    d.innerText=k;
+    d.onclick=()=>{input.value=k;document.getElementById("sendBtn").click();}
+    suggestList.appendChild(d);
+  });
+  suggestList.style.display=suggestList.children.length?"block":"none";
 };
 
-function speak(text) {
-  if (!speakerOn) return;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+/* VOICE INPUT */
+const rec=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(rec){
+  const r=new rec();
+  r.onstart=()=>voiceWave.style.display="block";
+  r.onend=()=>voiceWave.style.display="none";
+  r.onresult=e=>input.value=e.results[0][0].transcript;
+  document.getElementById("voiceBtn").onclick=()=>r.start();
 }
+
+/* SPEAK */
+function speak(text){
+  const u=new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(u);
+}
+document.getElementById("volumeBtn").onclick=function(){
+  speakEnabled=!speakEnabled;
+  this.classList.toggle("active");
+  if(speakEnabled && lastBotText) speak(lastBotText);
+};
 </script>
 
+</div>
 </body>
-</html>
+  </html>
