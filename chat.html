@@ -185,27 +185,42 @@ let synth=window.speechSynthesis;
 /* DATABASE */
 const db={
   "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
+
   "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
+
   "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
+
   "courses":"🎓 UG: BCA, B.Sc Computer Science, B.Sc Electronics, B.Com CA\n🎓 PG: M.Sc Computer Science, M.Com Finance",
+
   "departments":"🏫 Computer Science, Commerce, Electronics, Physical Education, General Department",
+
   "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Associations",
+
   "fees":"💰 Fees depend on course. Type 'BCA fee', 'MSc fee' etc.",
+
   "bca fee":"BCA total semester fee is ₹17,000",
+
   "msc fee":"M.Sc Computer Science total semester fee is ₹22,500",
+
   "parking":"🚗 College has parking facilities",
+
   "library":"📚 Well-equipped library",
-  "nss":"NSS is active and part of student activities"
+
+  "nss":"NSS is active and part of student activities",
+
+  /* ADMISSION DETAILS (NEW) */
+  "admission":"🎓 Admission – College of Applied Science, Vattamkulam\n\nUG Admission:\nAdmission starts after +2 results are published.\n\nCourses & Seats:\n• B.Sc Computer Science – 36 seats\n• BCA – 24 seats\n• B.Sc Electronics – 36 seats\n• B.Com (Computer Application) – 60 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both:\n• Calicut University Single Window\n• www.ihrdadmissions.org\n\n---\n\nPG Admission:\nAdmission starts after UG results are published.\n\nCourses & Seats:\n• M.Sc Computer Science – 10 seats\n• M.Com Finance – 15 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.",
+
+  "ug admission":"🎓 UG Admission – CAS Vattamkulam\n\nAdmission starts after +2 results are published.\n\nCourses & Seats:\n• B.Sc Computer Science – 36 seats\n• BCA – 24 seats\n• B.Sc Electronics – 36 seats\n• B.Com (Computer Application) – 60 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both portals.",
+
+  "pg admission":"🎓 PG Admission – CAS Vattamkulam\n\nAdmission starts after UG results are published.\n\nCourses & Seats:\n• M.Sc Computer Science – 10 seats\n• M.Com Finance – 15 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both portals."
 };
 
 const keywords=Object.keys(db);
 
-/* NORMALIZE TEXT (NEW) */
+/* NORMALIZE */
 function normalize(text){
-  return text
-    .toLowerCase()
-    .replace(/\s+/g,"")
-    .replace(/s$/,"");
+  return text.toLowerCase().replace(/\s+/g,"").replace(/s$/,"");
 }
 
 /* CHAT */
@@ -221,12 +236,11 @@ function addMsg(text,cls){
   }
 }
 
-/* UPDATED REPLY LOGIC (ONLY CHANGE) */
+/* REPLY */
 function getReply(q){
   const text=q.toLowerCase().trim();
   const clean=normalize(text);
 
-  // BASIC CONVERSATION
   if(["hi","hello","hey"].includes(text)){
     return "Hello! Welcome to College of Applied Science, Vattamkulam. How can I help you today?";
   }
@@ -235,7 +249,6 @@ function getReply(q){
     return "You're welcome! Happy to help you 😊";
   }
 
-  // SIMILAR WORD MATCHING
   for(let k in db){
     const key=normalize(k);
     if(clean.includes(key) || key.includes(clean)){
@@ -293,19 +306,15 @@ function speak(text){
   synth.speak(u);
 }
 
-/* VOLUME BUTTON */
+/* VOLUME */
 volumeBtn.onclick=function(){
   speakEnabled=!speakEnabled;
   this.classList.toggle("active");
-
-  if(speakEnabled){
-    allowSpeakFromNow=true;
-  }else{
-    synth.cancel();
-  }
+  if(speakEnabled){allowSpeakFromNow=true;}
+  else{synth.cancel();}
 };
 </script>
 
 </div>
 </body>
-  </html>
+                                                                        </html>
