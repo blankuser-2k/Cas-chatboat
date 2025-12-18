@@ -27,7 +27,6 @@ body{
   overflow:hidden;
 }
 
-/* HEADER */
 .header{
   background:#0a58ca;
   color:#fff;
@@ -37,7 +36,6 @@ body{
 }
 .header span{font-size:12px;display:block}
 
-/* SUGGEST GRID */
 .suggest-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -55,7 +53,6 @@ body{
 .suggest .emoji{font-size:20px}
 .suggest .label{font-size:11px}
 
-/* CHAT */
 #chatbox{
   flex:1;
   padding:10px;
@@ -78,7 +75,6 @@ body{
   color:white;
 }
 
-/* INPUT AREA */
 .autosuggest-wrap{padding:8px;border-top:1px solid #ddd}
 .input-area{
   display:flex;
@@ -99,7 +95,6 @@ button{
 .btn-send{background:#0a58ca;color:white}
 .btn-voice{background:#198754;color:white}
 
-/* AUTOSUGGEST */
 .suggest-list{
   background:white;
   border:1px solid #ccc;
@@ -112,7 +107,6 @@ button{
 }
 .suggest-item:hover{background:#e8f0ff}
 
-/* VOICE BAR */
 .voice-wave{
   height:4px;
   background:linear-gradient(90deg,#000,#fff);
@@ -124,7 +118,6 @@ button{
   to{background-position:200px}
 }
 
-/* VOLUME BUTTON */
 .volume-btn{
   position:absolute;
   bottom:90px;
@@ -172,7 +165,9 @@ button{
 <div id="suggestList" class="suggest-list" style="display:none"></div>
 </div>
 
-<div class="volume-btn" id="volumeBtn">🔊</div><script>
+<div class="volume-btn" id="volumeBtn">🔊</div>
+
+<script>
 const chatbox=document.getElementById("chatbox");
 const input=document.getElementById("userInput");
 const suggestList=document.getElementById("suggestList");
@@ -183,47 +178,47 @@ let allowSpeakFromNow=false;
 let synth=window.speechSynthesis;
 
 /* DATABASE */
-const db={
-  "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
-
+const db={"cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
   "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
-
   "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
 
   "courses":"🎓 UG: BCA, B.Sc Computer Science, B.Sc Electronics, B.Com CA\n🎓 PG: M.Sc Computer Science, M.Com Finance",
-
   "departments":"🏫 Computer Science, Commerce, Electronics, Physical Education, General Department",
-
   "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Associations",
 
-  "fees":"💰 Fees depend on course. Type 'BCA fee', 'MSc fee' etc.",
+  "fees":"💰 Fees depend on course. Type BCA fee, B.Sc fee, M.Com fee etc.",
 
-  "bca fee":"BCA total semester fee is ₹17,000",
+  "bca":"🎓 BCA – 4 Years\nEligibility: +2 with Maths/CS",
+  "bca fee":"💰 BCA Fee\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nCaution Deposit: ₹1,000",
 
-  "msc fee":"M.Sc Computer Science total semester fee is ₹22,500",
+  "bsc computer science":"🎓 B.Sc Computer Science – 4 Years",
+  "bsc computer science fee":"💰 Semester Fee: ₹17,270",
+
+  "bsc electronics":"🎓 B.Sc Electronics – 3 Years",
+  "bsc electronics fee":"💰 Semester Fee: ₹17,270",
+
+  "bcom":"🎓 B.Com (Computer Application)",
+  "bcom fee":"💰 Semester Fee: ₹13,035",
+
+  "mcom":"🎓 M.Com Finance – 2 Years",
+  "m.com fee":"💰 Semester Fee: ₹18,425\nAdmission Fee: ₹1,100",
+
+  "msc":"🎓 M.Sc Computer Science – 2 Years",
+  "msc fee":"💰 Semester Fee: ₹22,550",
 
   "parking":"🚗 College has parking facilities",
-
   "library":"📚 Well-equipped library",
-
   "nss":"NSS is active and part of student activities",
 
-  /* ADMISSION DETAILS (NEW) */
-  "admission":"🎓 Admission – College of Applied Science, Vattamkulam\n\nUG Admission:\nAdmission starts after +2 results are published.\n\nCourses & Seats:\n• B.Sc Computer Science – 36 seats\n• BCA – 24 seats\n• B.Sc Electronics – 36 seats\n• B.Com (Computer Application) – 60 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both:\n• Calicut University Single Window\n• www.ihrdadmissions.org\n\n---\n\nPG Admission:\nAdmission starts after UG results are published.\n\nCourses & Seats:\n• M.Sc Computer Science – 10 seats\n• M.Com Finance – 15 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.",
-
-  "ug admission":"🎓 UG Admission – CAS Vattamkulam\n\nAdmission starts after +2 results are published.\n\nCourses & Seats:\n• B.Sc Computer Science – 36 seats\n• BCA – 24 seats\n• B.Sc Electronics – 36 seats\n• B.Com (Computer Application) – 60 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both portals.",
-
-  "pg admission":"🎓 PG Admission – CAS Vattamkulam\n\nAdmission starts after UG results are published.\n\nCourses & Seats:\n• M.Sc Computer Science – 10 seats\n• M.Com Finance – 15 seats\n\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.\n\nIHRD quota students must apply in both portals."
+  "admission":"🎓 Admission details available after results.\nApply via Calicut University SWS and IHRD portal."
 };
 
 const keywords=Object.keys(db);
 
-/* NORMALIZE */
 function normalize(text){
   return text.toLowerCase().replace(/\s+/g,"").replace(/s$/,"");
 }
 
-/* CHAT */
 function addMsg(text,cls){
   const div=document.createElement("div");
   div.className="msg "+cls;
@@ -236,7 +231,6 @@ function addMsg(text,cls){
   }
 }
 
-/* REPLY */
 function getReply(q){
   const text=q.toLowerCase().trim();
   const clean=normalize(text);
@@ -244,7 +238,6 @@ function getReply(q){
   if(["hi","hello","hey"].includes(text)){
     return "Hello! Welcome to College of Applied Science, Vattamkulam. How can I help you today?";
   }
-
   if(text.includes("thank")){
     return "You're welcome! Happy to help you 😊";
   }
@@ -255,11 +248,9 @@ function getReply(q){
       return db[k];
     }
   }
-
   return "Please ensure that you entered the correct details or select Contact to get contact information.";
 }
 
-/* SEND */
 sendBtn.onclick=()=>{
   const text=input.value.trim();
   if(!text) return;
@@ -269,12 +260,10 @@ sendBtn.onclick=()=>{
   suggestList.style.display="none";
 };
 
-/* SUGGEST GRID */
 document.querySelectorAll(".suggest").forEach(s=>{
   s.onclick=()=>{input.value=s.dataset.q;sendBtn.click();}
 });
 
-/* AUTO SUGGEST */
 input.oninput=()=>{
   const v=input.value.toLowerCase();
   if(!v){suggestList.style.display="none";return;}
@@ -289,7 +278,6 @@ input.oninput=()=>{
   suggestList.style.display=suggestList.children.length?"block":"none";
 };
 
-/* VOICE INPUT */
 const rec=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(rec){
   const r=new rec();
@@ -299,22 +287,18 @@ if(rec){
   voiceBtn.onclick=()=>r.start();
 }
 
-/* SPEAK */
 function speak(text){
   synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  synth.speak(u);
+  synth.speak(new SpeechSynthesisUtterance(text));
 }
 
-/* VOLUME */
 volumeBtn.onclick=function(){
   speakEnabled=!speakEnabled;
   this.classList.toggle("active");
-  if(speakEnabled){allowSpeakFromNow=true;}
-  else{synth.cancel();}
+  if(speakEnabled) allowSpeakFromNow=true;
+  else synth.cancel();
 };
 </script>
-
 </div>
 </body>
-                                                                        </html>
+</html>
