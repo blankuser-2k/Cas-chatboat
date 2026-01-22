@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>CAS Chatbot - College of Applied Science, Vattamkulam</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 <style>
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{
@@ -15,7 +14,6 @@ body{
   justify-content:center;
   align-items:center;
 }
-
 .chat-container{
   width:100%;
   max-width:420px;
@@ -26,120 +24,37 @@ body{
   flex-direction:column;
   overflow:hidden;
 }
-
-.header{
-  background:#0a58ca;
-  color:#fff;
-  padding:12px;
-  text-align:center;
-  font-weight:bold;
-}
+.header{ background:#0a58ca; color:#fff; padding:12px; text-align:center; font-weight:bold; }
 .header span{font-size:12px;display:block}
-
-.suggest-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  padding:10px;
-}
-.suggest{
-  background:linear-gradient(135deg,#1e90ff,#ff4b4b);
-  color:white;
-  border-radius:12px;
-  padding:10px 5px;
-  text-align:center;
-  cursor:pointer;
-}
+.suggest-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px; }
+.suggest{ background:linear-gradient(135deg,#1e90ff,#ff4b4b); color:white; border-radius:12px; padding:10px 5px; text-align:center; cursor:pointer; }
 .suggest .emoji{font-size:20px}
 .suggest .label{font-size:11px}
-
-#chatbox{
-  flex:1;
-  padding:10px;
-  overflow-y:auto;
-}
-.msg{
-  max-width:80%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:12px;
-  line-height:1.4;
-}
-.user{
-  background:#0a58ca;
-  color:white;
-  margin-left:auto;
-}
-.bot{
-  background:#198754;
-  color:white;
-}
-
+#chatbox{ flex:1; padding:10px; overflow-y:auto; }
+.msg{ max-width:80%; padding:10px; margin:6px 0; border-radius:12px; line-height:1.4; }
+.user{ background:#0a58ca; color:white; margin-left:auto; }
+.bot{ background:#198754; color:white; }
 .autosuggest-wrap{padding:8px;border-top:1px solid #ddd}
-.input-area{
-  display:flex;
-  gap:6px;
-}
-input{
-  flex:1;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-button{
-  border:none;
-  border-radius:8px;
-  padding:0 10px;
-  cursor:pointer;
-}
+.input-area{ display:flex; gap:6px; }
+input{ flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; }
+button{ border:none; border-radius:8px; padding:0 10px; cursor:pointer; }
 .btn-send{background:#0a58ca;color:white}
 .btn-voice{background:#198754;color:white}
-
-.suggest-list{
-  background:white;
-  border:1px solid #ccc;
-  border-radius:8px;
-  margin-top:5px;
-}
-.suggest-item{
-  padding:8px;
-  cursor:pointer;
-}
+.suggest-list{ background:white; border:1px solid #ccc; border-radius:8px; margin-top:5px; }
+.suggest-item{ padding:8px; cursor:pointer; }
 .suggest-item:hover{background:#e8f0ff}
-
-.voice-wave{
-  height:4px;
-  background:linear-gradient(90deg,#000,#fff);
-  animation:move 1s linear infinite;
-  display:none;
-}
-@keyframes move{
-  from{background-position:0}
-  to{background-position:200px}
-}
-
-.volume-btn{
-  position:absolute;
-  bottom:90px;
-  right:15px;
-  background:black;
-  color:white;
-  padding:8px;
-  border-radius:50%;
-  cursor:pointer;
-}
+.voice-wave{ height:4px; background:linear-gradient(90deg,#000,#fff); animation:move 1s linear infinite; display:none; }
+@keyframes move{ from{background-position:0} to{background-position:200px} }
+.volume-btn{ position:absolute; bottom:90px; right:15px; background:black; color:white; padding:8px; border-radius:50%; cursor:pointer; }
 .volume-btn.active{background:green}
 </style>
 </head>
-
 <body>
 <div class="chat-container">
-
 <div class="header">
 🤖 CAS Chatbot
 <span>College of Applied Science, Vattamkulam</span>
 </div>
-
 <div class="suggest-grid" id="suggestGrid">
   <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
   <div class="suggest" data-q="courses"><div class="emoji">🎓</div><div class="label">Courses</div></div>
@@ -150,74 +65,75 @@ button{
   <div class="suggest" data-q="contact"><div class="emoji">📞</div><div class="label">Contact</div></div>
   <div class="suggest" data-q="cas"><div class="emoji">ℹ️</div><div class="label">What is CAS</div></div>
 </div>
-
 <div id="chatbox"></div>
-
 <div class="autosuggest-wrap">
 <div class="voice-wave" id="voiceWave"></div>
-
 <div class="input-area">
 <input id="userInput" placeholder="Type your question..." />
 <button class="btn-voice" id="voiceBtn">🎤</button>
 <button class="btn-send" id="sendBtn">Send</button>
 </div>
-
 <div id="suggestList" class="suggest-list" style="display:none"></div>
 </div>
-
 <div class="volume-btn" id="volumeBtn">🔊</div>
-
 <script>
 const chatbox=document.getElementById("chatbox");
 const input=document.getElementById("userInput");
 const suggestList=document.getElementById("suggestList");
 const voiceWave=document.getElementById("voiceWave");
-
 let speakEnabled=false;
 let allowSpeakFromNow=false;
 let synth=window.speechSynthesis;
 
 /* DATABASE */
-const db={"cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
+const db={
+  "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
   "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
   "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
-
   "courses":"🎓 UG: BCA, B.Sc Computer Science, B.Sc Electronics, B.Com CA\n🎓 PG: M.Sc Computer Science, M.Com Finance",
   "departments":"🏫 Computer Science, Commerce, Electronics, Physical Education, General Department",
   "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Associations",
-
   "fees":"💰 Fees depend on course. Type BCA fee, B.Sc fee, M.Com fee etc.",
-
   "bca":"🎓 BCA – 4 Years\nEligibility: +2 with Maths/CS",
   "bca fee":"💰 BCA Fee\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nCaution Deposit: ₹1,000",
-
   "bsc computer science":"🎓 B.Sc Computer Science – 4 Years",
   "bsc computer science fee":"💰 Semester Fee: ₹17,270",
-
   "bsc electronics":"🎓 B.Sc Electronics – 3 Years",
   "bsc electronics fee":"💰 Semester Fee: ₹17,270",
-
   "bcom":"🎓 B.Com (Computer Application)",
   "bcom fee":"💰 Semester Fee: ₹13,035",
-
   "mcom":"🎓 M.Com Finance – 2 Years",
   "m.com fee":"💰 Semester Fee: ₹18,425\nAdmission Fee: ₹1,100",
-
   "msc":"🎓 M.Sc Computer Science – 2 Years",
   "msc fee":"💰 Semester Fee: ₹22,550",
-
   "parking":"🚗 College has parking facilities",
   "library":"📚 Well-equipped library",
   "nss":"NSS is active and part of student activities",
+  "admission":"🎓 Admission details available after results.\nApply via Calicut University SWS and IHRD portal.",
 
-  "admission":"🎓 Admission details available after results.\nApply via Calicut University SWS and IHRD portal."
+  /* NEW DATA ADDED */
+  "principal":"👨‍🏫 Sri. Abdussammed P. - Head of institution since 2005, provides academic & administrative leadership",
+  "computer science hod":"💻 HOD: Hari C M",
+  "computer science faculty":"Nandaja P.R, Gopalakrishnan U K, Sarathlal S K, Aswathy K P, Ranjusha M",
+  "commerce hod":"🧑‍🏫 HOD: Surya V S",
+  "commerce faculty":"Deekshith M G, Jamsheera Oravil, Anjusree, Athira K, Anjali V Nair",
+  "electronics hod":"🔌 HOD: Silja M.S",
+  "electronics faculty":"Nayana K, Mintu E M, Mohammed Mustafa K C",
+  "general department faculty":"Aswathy B, Ranila O.P, Bindhu A K, Ranya K.V, Bindhu K",
+  "admin staff":"Senior Office Assistant: Ms. Asharaf Tharammal, Office Assistant: Kum. Advaitha M, LGS: Mr. Rasheed K V, Librarian: Mr. Hamzath Ali, Data Entry Operator: Ms. Beena K, PTS: Ms. Deepa, Ms. Bindhu, Ms. Jamsheena",
+  "facilities":"Library, Computer labs, Electronics lab, Smart classrooms, Seminar hall, Sports facilities, Parking",
+  "student programs":"Job fairs, Technical & cultural fests, Seminars & workshops, Sports competitions, NSS camp, College magazine",
+  "clubs activities":"NSS, Women Development Cell, Anti-Ragging Cell, Grievance Cell, Placement Cell, IQAC, CS Association, Commerce Association, Electronics Association, Literary Club, Bhoomithra Sena, Health & Sports Club, Daksha, Mathematics Club, Tourism Club, IIC, Media Cell",
+  "important links":"IHRD: https://ihrd.ac.in, Calicut University Portal, IHRD Admission Portal, Online Results Portal, Scholarship & Fee Payment Portals",
+  "institution details":"Total research journals: ~10, New books added annually, Included under UGC Section 2(f), Not NAAC accredited yet"
 };
 
-const keywords=Object.keys(db);
-
+/* FIXED NORMALIZE FUNCTION */
 function normalize(text){
-  return text.toLowerCase().replace(/\s+/g,"").replace(/s$/,"");
+  return text.toLowerCase().replace(/\s+/g,"");
 }
+
+const keywords=Object.keys(db);
 
 function addMsg(text,cls){
   const div=document.createElement("div");
@@ -225,10 +141,7 @@ function addMsg(text,cls){
   div.innerText=text;
   chatbox.appendChild(div);
   chatbox.scrollTop=chatbox.scrollHeight;
-
-  if(cls==="bot" && speakEnabled && allowSpeakFromNow){
-    speak(text);
-  }
+  if(cls==="bot" && speakEnabled && allowSpeakFromNow){ speak(text); }
 }
 
 function getReply(q){
@@ -248,6 +161,7 @@ function getReply(q){
       return db[k];
     }
   }
+
   return "Please ensure that you entered the correct details or select Contact to get contact information.";
 }
 
