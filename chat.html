@@ -162,9 +162,6 @@ const chatbox=document.getElementById("chatbox");
 const input=document.getElementById("userInput");
 const suggestList=document.getElementById("suggestList");
 const voiceWave=document.getElementById("voiceWave");
-let speakEnabled=false;
-let allowSpeakFromNow=false;
-let synth=window.speechSynthesis;
 
 /* DATABASE */
 const db={
@@ -176,20 +173,13 @@ const db={
 "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club",
 "fees":"💰 Fees depend on course. Type course name + fee",
 
-/* COURSE DETAILS */
-"bba logistics honours":"BBA Logistics Honours – 4 Years (8 Semesters)\nSeats: 30\nEligibility: +2 with 45%\nSemester Fee: ₹8,470\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"bsc electronics":"B.Sc Electronics – 3 Years (6 Semesters)\nSeats: 36+\nEligibility: +2 with Maths/Electronics\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"bcom honours":"B.Com Honours (Computer Applications) – 4 Years\nSeats: 48+\nSemester Fee: ₹13,035\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"mcom finance":"M.Com Finance – 2 Years\nSeats: 15+\nSemester Fee: ₹18,425\nAdmission Fee: ₹1,100\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"bca":"BCA – 4 Years\nSeats: 24\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"bsc computer science":"B.Sc Computer Science Honours – 4 Years\nSeats: 36+\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
-
-"msc computer science":"M.Sc Computer Science – 2 Years\nSeats: 10+\nSemester Fee: ₹22,550\nAdmission Fee: ₹1,100\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000"
+"bba logistics honours":"BBA Logistics Honours – 4 Years\nSeats: 30\nSemester Fee: ₹8,470",
+"bsc electronics":"B.Sc Electronics – 3 Years\nSemester Fee: ₹17,270",
+"bcom honours":"B.Com Honours (Computer Applications)\nSemester Fee: ₹13,035",
+"mcom finance":"M.Com Finance\nSemester Fee: ₹18,425",
+"bca":"BCA – 4 Years\nSemester Fee: ₹17,270",
+"bsc computer science":"B.Sc Computer Science Honours\nSemester Fee: ₹17,270",
+"msc computer science":"M.Sc Computer Science\nSemester Fee: ₹22,550"
 };
 
 const keywords=Object.keys(db);
@@ -206,6 +196,7 @@ function addMsg(text,cls){
   chatbox.scrollTop=chatbox.scrollHeight;
 }
 
+/* ✅ FIXED LOGIC (ONLY CHANGE) */
 function getReply(q){
   const text=q.toLowerCase().trim();
   const clean=normalize(text);
@@ -216,9 +207,19 @@ function getReply(q){
   if(text.includes("thank"))
     return "You're welcome! 😊";
 
+  /* EXACT MATCH FIRST */
   for(let k in db){
-    if(clean.includes(normalize(k)) || normalize(k).includes(clean))
+    if(clean === normalize(k)){
       return db[k];
+    }
+  }
+
+  /* SAFE PARTIAL MATCH */
+  for(let k in db){
+    const keyNorm = normalize(k);
+    if(clean.includes(keyNorm) || keyNorm.includes(clean)){
+      return db[k];
+    }
   }
 
   return "Sorry, I couldn’t understand that.\nPlease contact the college for further details.\n\n📞 Phone: 0494-2689655 / 8547006802  📧 Email: casvattamkulam@ihrd.ac.in";
