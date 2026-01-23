@@ -4,244 +4,143 @@
 <meta charset="UTF-8">
 <title>CAS Chatbot - College of Applied Science, Vattamkulam</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-body{
-  margin:0;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.chat-container{
-  width:100%;
-  max-width:420px;
-  height:95vh;
-  background:#f5f7fb;
-  border-radius:14px;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-.header{
-  background:#0a58ca;
-  color:#fff;
-  padding:12px;
-  text-align:center;
-  font-weight:bold;
-}
+body{margin:0;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);height:100vh;display:flex;justify-content:center;align-items:center}
+.chat-container{width:100%;max-width:420px;height:95vh;background:#f5f7fb;border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.header{background:#0a58ca;color:#fff;padding:12px;text-align:center;font-weight:bold}
 .header span{font-size:12px;display:block}
-.suggest-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  padding:10px;
-}
-.suggest{
-  background:linear-gradient(135deg,#1e90ff,#ff4b4b);
-  color:white;
-  border-radius:12px;
-  padding:10px 5px;
-  text-align:center;
-  cursor:pointer;
-}
+.suggest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px}
+.suggest{background:linear-gradient(135deg,#1e90ff,#ff4b4b);color:white;border-radius:12px;padding:10px 5px;text-align:center;cursor:pointer}
 .suggest .emoji{font-size:20px}
 .suggest .label{font-size:11px}
-#chatbox{
-  flex:1;
-  padding:10px;
-  overflow-y:auto;
-}
-.msg{
-  max-width:80%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:12px;
-  line-height:1.4;
-}
-.user{
-  background:#0a58ca;
-  color:white;
-  margin-left:auto;
-}
-.bot{
-  background:#198754;
-  color:white;
-}
+#chatbox{flex:1;padding:10px;overflow-y:auto}
+.msg{max-width:80%;padding:10px;margin:6px 0;border-radius:12px;line-height:1.4}
+.user{background:#0a58ca;color:white;margin-left:auto}
+.bot{background:#198754;color:white}
 .autosuggest-wrap{padding:8px;border-top:1px solid #ddd}
-.input-area{
-  display:flex;
-  gap:6px;
-}
-input{
-  flex:1;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-button{
-  border:none;
-  border-radius:8px;
-  padding:0 10px;
-  cursor:pointer;
-}
+.input-area{display:flex;gap:6px}
+input{flex:1;padding:10px;border-radius:8px;border:1px solid #ccc}
+button{border:none;border-radius:8px;padding:0 10px;cursor:pointer}
 .btn-send{background:#0a58ca;color:white}
 .btn-voice{background:#198754;color:white}
-.suggest-list{
-  background:white;
-  border:1px solid #ccc;
-  border-radius:8px;
-  margin-top:5px;
-}
-.suggest-item{
-  padding:8px;
-  cursor:pointer;
-}
+.suggest-list{background:white;border:1px solid #ccc;border-radius:8px;margin-top:5px}
+.suggest-item{padding:8px;cursor:pointer}
 .suggest-item:hover{background:#e8f0ff}
-.voice-wave{
-  height:4px;
-  background:linear-gradient(90deg,#000,#fff);
-  animation:move 1s linear infinite;
-  display:none;
-}
-@keyframes move{
-  from{background-position:0}
-  to{background-position:200px}
-}
-.volume-btn{
-  position:absolute;
-  bottom:90px;
-  right:15px;
-  background:black;
-  color:white;
-  padding:8px;
-  border-radius:50%;
-  cursor:pointer;
-}
-.volume-btn.active{background:green}
+.volume-btn{position:absolute;bottom:90px;right:15px;background:black;color:white;padding:8px;border-radius:50%;cursor:pointer}
 </style>
 </head>
 
 <body>
 <div class="chat-container">
-
-<div class="header">
-🤖 CAS Chatbot
-<span>College of Applied Science, Vattamkulam</span>
-</div>
+<div class="header">🤖 CAS Chatbot<span>College of Applied Science, Vattamkulam</span></div>
 
 <div class="suggest-grid">
-  <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
-  <div class="suggest" data-q="courses"><div class="emoji">🎓</div><div class="label">Courses</div></div>
-  <div class="suggest" data-q="fees"><div class="emoji">💰</div><div class="label">Fees</div></div>
-  <div class="suggest" data-q="admission"><div class="emoji">📝</div><div class="label">Admission</div></div>
-  <div class="suggest" data-q="departments"><div class="emoji">🏫</div><div class="label">Departments</div></div>
-  <div class="suggest" data-q="clubs"><div class="emoji">⚡</div><div class="label">Clubs</div></div>
-  <div class="suggest" data-q="contact"><div class="emoji">📞</div><div class="label">Contact</div></div>
-  <div class="suggest" data-q="cas"><div class="emoji">ℹ️</div><div class="label">What is CAS</div></div>
+  <div class="suggest" data-q="address">📍<div class="label">Address</div></div>
+  <div class="suggest" data-q="courses">🎓<div class="label">Courses</div></div>
+  <div class="suggest" data-q="fees">💰<div class="label">Fees</div></div>
+  <div class="suggest" data-q="admission">📝<div class="label">Admission</div></div>
+  <div class="suggest" data-q="departments">🏫<div class="label">Departments</div></div>
+  <div class="suggest" data-q="facilities">🏢<div class="label">Facilities</div></div>
+  <div class="suggest" data-q="contact">📞<div class="label">Contact</div></div>
+  <div class="suggest" data-q="principal">👨‍🏫<div class="label">Principal</div></div>
 </div>
 
 <div id="chatbox"></div>
 
 <div class="autosuggest-wrap">
-<div class="voice-wave" id="voiceWave"></div>
 <div class="input-area">
 <input id="userInput" placeholder="Type your question..." />
-<button class="btn-voice" id="voiceBtn">🎤</button>
 <button class="btn-send" id="sendBtn">Send</button>
 </div>
 <div id="suggestList" class="suggest-list" style="display:none"></div>
 </div>
 
-<div class="volume-btn" id="volumeBtn">🔊</div>
-
 <script>
 const chatbox=document.getElementById("chatbox");
 const input=document.getElementById("userInput");
 const suggestList=document.getElementById("suggestList");
-const voiceWave=document.getElementById("voiceWave");
 
-/* DATABASE */
+/* FULL DATABASE */
 const db={
-"cas":"CAS means College of Applied Science. Managed by IHRD and affiliated to University of Calicut.",
-"address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
-"contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
-"courses":"🎓 UG & PG courses available. Type course name like BCA, BBA Logistics, B.Sc CS, M.Com Finance etc.",
-"departments":"🏫 Computer Science, Commerce, Electronics, General Department",
-"clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club",
-"fees":"💰 Fees depend on course. Type course name + fee",
+"cas":"College of Applied Science (CAS), Vattamkulam is managed by IHRD and affiliated to the University of Calicut.",
 
-"bba logistics honours":"BBA Logistics Honours – 4 Years\nSeats: 30\nSemester Fee: ₹8,470",
-"bsc electronics":"B.Sc Electronics – 3 Years\nSemester Fee: ₹17,270",
-"bcom honours":"B.Com Honours (Computer Applications)\nSemester Fee: ₹13,035",
-"mcom finance":"M.Com Finance\nSemester Fee: ₹18,425",
-"bca":"BCA – 4 Years\nSemester Fee: ₹17,270",
-"bsc computer science":"B.Sc Computer Science Honours\nSemester Fee: ₹17,270",
-"msc computer science":"M.Sc Computer Science\nSemester Fee: ₹22,550"
+"address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
+
+"contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
+
+"principal":"👨‍🏫 Principal: Dr. K. Abdul Nazar\nThe Principal is responsible for academic leadership, administration, coordination with IHRD and University of Calicut.",
+
+"departments":"🏫 Departments:\n• Computer Science\n• Commerce\n• Electronics\n• General Department\n• Physical Education",
+
+"faculty":"👩‍🏫 Faculty available in Computer Science, Commerce, Electronics, General Department and Physical Education.",
+
+"computer science faculty":"Computer Science faculty handle BCA, B.Sc CS and M.Sc CS programmes.",
+
+"commerce faculty":"Commerce faculty handle B.Com and M.Com programmes.",
+
+"electronics faculty":"Electronics faculty handle B.Sc Electronics programme.",
+
+"administration":"Administration includes Principal, Superintendent, Head Clerk and office staff.",
+
+"non teaching staff":"Non-teaching staff support laboratory, library and office activities.",
+
+"courses":"🎓 Courses Offered:\nUG: BCA, BBA Logistics Honours, B.Sc Computer Science, B.Sc Electronics, B.Com Computer Applications\nPG: M.Sc Computer Science, M.Com Finance",
+
+"fees":"💰 Fees vary by course. Type course name like 'BCA', 'BBA Logistics Honours', 'M.Com Finance' to know details.",
+
+"admission":"📝 Admission Process:\nUG & PG admissions start after publication of qualifying exam results.\n50% seats through Calicut University Single Window.\n50% seats through IHRD Centralised Admission Portal.",
+
+"ug admission":"UG admission is based on +2 marks and notified after +2 results (Kerala Govt).",
+
+"pg admission":"PG admission is based on UG marks and notified after degree results (University of Calicut).",
+
+"facilities":"🏢 Facilities:\n• Well-equipped Library\n• Computer Labs\n• Electronics Labs\n• Seminar Hall\n• Sports Facilities\n• Parking Area",
+
+"library":"📚 Library with textbooks, reference books, journals and digital resources.",
+
+"parking":"🚗 Separate parking facilities for students and staff.",
+
+"placement":"🎯 Placement Cell provides career guidance and placement assistance.",
+
+"nss":"⚡ NSS unit actively participates in social service activities.",
+
+"ugc":"The institution is recognized under UGC 2(f).",
+
+"naac":"The college is accredited by NAAC.",
+
+"journals":"The institution publishes academic and research journals."
 };
 
 const keywords=Object.keys(db);
 
-function normalize(t){
-  return t.toLowerCase().replace(/\s+/g,"").replace(/s$/,"");
-}
-
 function addMsg(text,cls){
-  const div=document.createElement("div");
-  div.className="msg "+cls;
-  div.innerText=text;
-  chatbox.appendChild(div);
+  const d=document.createElement("div");
+  d.className="msg "+cls;
+  d.innerText=text;
+  chatbox.appendChild(d);
   chatbox.scrollTop=chatbox.scrollHeight;
 }
 
-/* ✅ FIXED LOGIC (ONLY CHANGE) */
 function getReply(q){
-  const text=q.toLowerCase().trim();
-  const clean=normalize(text);
-
-  if(["hi","hello","hey"].includes(text))
-    return "Hello! Welcome to College of Applied Science, Vattamkulam.";
-
-  if(text.includes("thank"))
-    return "You're welcome! 😊";
-
-  /* EXACT MATCH FIRST */
-  for(let k in db){
-    if(clean === normalize(k)){
-      return db[k];
-    }
-  }
-
-  /* SAFE PARTIAL MATCH */
-  for(let k in db){
-    const keyNorm = normalize(k);
-    if(clean.includes(keyNorm) || keyNorm.includes(clean)){
-      return db[k];
-    }
-  }
-
-  return "Sorry, I couldn’t understand that.\nPlease contact the college for further details.\n\n📞 Phone: 0494-2689655 / 8547006802  📧 Email: casvattamkulam@ihrd.ac.in";
+  const t=q.toLowerCase().trim();
+  if(db[t]) return db[t];
+  return "Sorry, I couldn’t understand that.\nPlease contact the college for further details.\n\n📞 Phone: 0494-2689655 / 8547006802\n📧 Email: casvattamkulam@ihrd.ac.in";
 }
 
 sendBtn.onclick=()=>{
-  if(!input.value.trim()) return;
+  if(!input.value.trim())return;
   addMsg(input.value,"user");
   addMsg(getReply(input.value),"bot");
   input.value="";
   suggestList.style.display="none";
 };
 
-document.querySelectorAll(".suggest").forEach(s=>{
-  s.onclick=()=>{input.value=s.dataset.q;sendBtn.click();}
-});
-
 input.oninput=()=>{
   const v=input.value.toLowerCase();
   if(!v){suggestList.style.display="none";return;}
   suggestList.innerHTML="";
-  keywords.filter(k=>k.includes(v)).forEach(k=>{
+  keywords.filter(k=>k.startsWith(v)).forEach(k=>{
     const d=document.createElement("div");
     d.className="suggest-item";
     d.innerText=k;
