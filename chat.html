@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>CAS Chatbot - College of Applied Science, Vattamkulam</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{
@@ -24,39 +25,114 @@ body{
   flex-direction:column;
   overflow:hidden;
 }
-.header{ background:#0a58ca; color:#fff; padding:12px; text-align:center; font-weight:bold; }
+.header{
+  background:#0a58ca;
+  color:#fff;
+  padding:12px;
+  text-align:center;
+  font-weight:bold;
+}
 .header span{font-size:12px;display:block}
-.suggest-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px; }
-.suggest{ background:linear-gradient(135deg,#1e90ff,#ff4b4b); color:white; border-radius:12px; padding:10px 5px; text-align:center; cursor:pointer; }
+.suggest-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:10px;
+}
+.suggest{
+  background:linear-gradient(135deg,#1e90ff,#ff4b4b);
+  color:white;
+  border-radius:12px;
+  padding:10px 5px;
+  text-align:center;
+  cursor:pointer;
+}
 .suggest .emoji{font-size:20px}
 .suggest .label{font-size:11px}
-#chatbox{ flex:1; padding:10px; overflow-y:auto; }
-.msg{ max-width:80%; padding:10px; margin:6px 0; border-radius:12px; line-height:1.4; }
-.user{ background:#0a58ca; color:white; margin-left:auto; }
-.bot{ background:#198754; color:white; }
+#chatbox{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+}
+.msg{
+  max-width:80%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:12px;
+  line-height:1.4;
+}
+.user{
+  background:#0a58ca;
+  color:white;
+  margin-left:auto;
+}
+.bot{
+  background:#198754;
+  color:white;
+}
 .autosuggest-wrap{padding:8px;border-top:1px solid #ddd}
-.input-area{ display:flex; gap:6px; }
-input{ flex:1; padding:10px; border-radius:8px; border:1px solid #ccc; }
-button{ border:none; border-radius:8px; padding:0 10px; cursor:pointer; }
+.input-area{
+  display:flex;
+  gap:6px;
+}
+input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  border:none;
+  border-radius:8px;
+  padding:0 10px;
+  cursor:pointer;
+}
 .btn-send{background:#0a58ca;color:white}
 .btn-voice{background:#198754;color:white}
-.suggest-list{ background:white; border:1px solid #ccc; border-radius:8px; margin-top:5px; }
-.suggest-item{ padding:8px; cursor:pointer; }
+.suggest-list{
+  background:white;
+  border:1px solid #ccc;
+  border-radius:8px;
+  margin-top:5px;
+}
+.suggest-item{
+  padding:8px;
+  cursor:pointer;
+}
 .suggest-item:hover{background:#e8f0ff}
-.voice-wave{ height:4px; background:linear-gradient(90deg,#000,#fff); animation:move 1s linear infinite; display:none; }
-@keyframes move{ from{background-position:0} to{background-position:200px} }
-.volume-btn{ position:absolute; bottom:90px; right:15px; background:black; color:white; padding:8px; border-radius:50%; cursor:pointer; }
+.voice-wave{
+  height:4px;
+  background:linear-gradient(90deg,#000,#fff);
+  animation:move 1s linear infinite;
+  display:none;
+}
+@keyframes move{
+  from{background-position:0}
+  to{background-position:200px}
+}
+.volume-btn{
+  position:absolute;
+  bottom:90px;
+  right:15px;
+  background:black;
+  color:white;
+  padding:8px;
+  border-radius:50%;
+  cursor:pointer;
+}
 .volume-btn.active{background:green}
 </style>
 </head>
+
 <body>
 <div class="chat-container">
+
 <div class="header">
 🤖 CAS Chatbot
 <span>College of Applied Science, Vattamkulam</span>
 </div>
 
-<div class="suggest-grid" id="suggestGrid">
+<div class="suggest-grid">
   <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
   <div class="suggest" data-q="courses"><div class="emoji">🎓</div><div class="label">Courses</div></div>
   <div class="suggest" data-q="fees"><div class="emoji">💰</div><div class="label">Fees</div></div>
@@ -90,17 +166,37 @@ let speakEnabled=false;
 let allowSpeakFromNow=false;
 let synth=window.speechSynthesis;
 
+/* DATABASE */
 const db={
-  "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
-  "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
-  "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in"
+"cas":"CAS means College of Applied Science. Managed by IHRD and affiliated to University of Calicut.",
+"address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
+"contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
+"courses":"🎓 UG & PG courses available. Type course name like BCA, BBA Logistics, B.Sc CS, M.Com Finance etc.",
+"departments":"🏫 Computer Science, Commerce, Electronics, General Department",
+"clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club",
+"fees":"💰 Fees depend on course. Type course name + fee",
+
+/* COURSE DETAILS */
+"bba logistics honours":"BBA Logistics Honours – 4 Years (8 Semesters)\nSeats: 30\nEligibility: +2 with 45%\nSemester Fee: ₹8,470\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"bsc electronics":"B.Sc Electronics – 3 Years (6 Semesters)\nSeats: 36+\nEligibility: +2 with Maths/Electronics\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"bcom honours":"B.Com Honours (Computer Applications) – 4 Years\nSeats: 48+\nSemester Fee: ₹13,035\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"mcom finance":"M.Com Finance – 2 Years\nSeats: 15+\nSemester Fee: ₹18,425\nAdmission Fee: ₹1,100\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"bca":"BCA – 4 Years\nSeats: 24\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"bsc computer science":"B.Sc Computer Science Honours – 4 Years\nSeats: 36+\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000",
+
+"msc computer science":"M.Sc Computer Science – 2 Years\nSeats: 10+\nSemester Fee: ₹22,550\nAdmission Fee: ₹1,100\nAlumni Fee: ₹200\nCaution Deposit: ₹1,000"
 };
 
-function normalize(text){
-  return text.toLowerCase().replace(/\s+/g,"");
-}
-
 const keywords=Object.keys(db);
+
+function normalize(t){
+  return t.toLowerCase().replace(/\s+/g,"").replace(/s$/,"");
+}
 
 function addMsg(text,cls){
   const div=document.createElement("div");
@@ -114,26 +210,44 @@ function getReply(q){
   const text=q.toLowerCase().trim();
   const clean=normalize(text);
 
-  if(["hi","hello","hey"].includes(text)){
-    return "Hello! Welcome to College of Applied Science, Vattamkulam. How can I help you today?";
-  }
+  if(["hi","hello","hey"].includes(text))
+    return "Hello! Welcome to College of Applied Science, Vattamkulam.";
+
+  if(text.includes("thank"))
+    return "You're welcome! 😊";
 
   for(let k in db){
-    const key=normalize(k);
-    if(clean.includes(key) || key.includes(clean)){
+    if(clean.includes(normalize(k)) || normalize(k).includes(clean))
       return db[k];
-    }
   }
 
   return "Sorry, I couldn’t understand that.\nPlease contact the college for further details.\n\n📞 Phone: 0494-2689655 / 8547006802  📧 Email: casvattamkulam@ihrd.ac.in";
 }
 
 sendBtn.onclick=()=>{
-  const text=input.value.trim();
-  if(!text) return;
-  addMsg(text,"user");
+  if(!input.value.trim()) return;
+  addMsg(input.value,"user");
+  addMsg(getReply(input.value),"bot");
   input.value="";
-  setTimeout(()=>addMsg(getReply(text),"bot"),400);
+  suggestList.style.display="none";
+};
+
+document.querySelectorAll(".suggest").forEach(s=>{
+  s.onclick=()=>{input.value=s.dataset.q;sendBtn.click();}
+});
+
+input.oninput=()=>{
+  const v=input.value.toLowerCase();
+  if(!v){suggestList.style.display="none";return;}
+  suggestList.innerHTML="";
+  keywords.filter(k=>k.includes(v)).forEach(k=>{
+    const d=document.createElement("div");
+    d.className="suggest-item";
+    d.innerText=k;
+    d.onclick=()=>{input.value=k;sendBtn.click();}
+    suggestList.appendChild(d);
+  });
+  suggestList.style.display=suggestList.children.length?"block":"none";
 };
 </script>
 </div>
