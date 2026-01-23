@@ -55,6 +55,7 @@ button{ border:none; border-radius:8px; padding:0 10px; cursor:pointer; }
 🤖 CAS Chatbot
 <span>College of Applied Science, Vattamkulam</span>
 </div>
+
 <div class="suggest-grid" id="suggestGrid">
   <div class="suggest" data-q="address"><div class="emoji">📍</div><div class="label">Address</div></div>
   <div class="suggest" data-q="courses"><div class="emoji">🎓</div><div class="label">Courses</div></div>
@@ -65,7 +66,9 @@ button{ border:none; border-radius:8px; padding:0 10px; cursor:pointer; }
   <div class="suggest" data-q="contact"><div class="emoji">📞</div><div class="label">Contact</div></div>
   <div class="suggest" data-q="cas"><div class="emoji">ℹ️</div><div class="label">What is CAS</div></div>
 </div>
+
 <div id="chatbox"></div>
+
 <div class="autosuggest-wrap">
 <div class="voice-wave" id="voiceWave"></div>
 <div class="input-area">
@@ -75,7 +78,9 @@ button{ border:none; border-radius:8px; padding:0 10px; cursor:pointer; }
 </div>
 <div id="suggestList" class="suggest-list" style="display:none"></div>
 </div>
+
 <div class="volume-btn" id="volumeBtn">🔊</div>
+
 <script>
 const chatbox=document.getElementById("chatbox");
 const input=document.getElementById("userInput");
@@ -85,50 +90,12 @@ let speakEnabled=false;
 let allowSpeakFromNow=false;
 let synth=window.speechSynthesis;
 
-/* DATABASE */
 const db={
   "cas":"CAS means College of Applied Science. This college is managed by IHRD and affiliated to University of Calicut.",
   "address":"📍 Nellissery, Sukapuram P.O, Edappal, Malappuram, Kerala – 679576",
-  "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in",
-  "courses":"🎓 UG: BCA, B.Sc Computer Science, B.Sc Electronics, B.Com CA\n🎓 PG: M.Sc Computer Science, M.Com Finance",
-  "departments":"🏫 Computer Science, Commerce, Electronics, Physical Education, General Department",
-  "clubs":"⚡ NSS, Placement Cell, Women Cell, Anti-Ragging Cell, Literary Club, Associations",
-  "fees":"💰 Fees depend on course. Type BCA fee, B.Sc fee, M.Com fee etc.",
-  "bca":"🎓 BCA – 4 Years\nEligibility: +2 with Maths/CS",
-  "bca fee":"💰 BCA Fee\nSemester Fee: ₹17,270\nAdmission Fee: ₹330\nCaution Deposit: ₹1,000",
-  "bsc computer science":"🎓 B.Sc Computer Science – 4 Years",
-  "bsc computer science fee":"💰 Semester Fee: ₹17,270",
-  "bsc electronics":"🎓 B.Sc Electronics – 3 Years",
-  "bsc electronics fee":"💰 Semester Fee: ₹17,270",
-  "bcom":"🎓 B.Com (Computer Application)",
-  "bcom fee":"💰 Semester Fee: ₹13,035",
-  "mcom":"🎓 M.Com Finance – 2 Years",
-  "m.com fee":"💰 Semester Fee: ₹18,425\nAdmission Fee: ₹1,100",
-  "msc":"🎓 M.Sc Computer Science – 2 Years",
-  "msc fee":"💰 Semester Fee: ₹22,550",
-  "parking":"🚗 College has parking facilities",
-  "library":"📚 Well-equipped library",
-  "nss":"NSS is active and part of student activities",
-  "admission":"🎓 Admission details available after results.\nApply via Calicut University SWS and IHRD portal.",
-
-  /* NEW DATA ADDED */
-  "principal":"👨‍🏫 Sri. Abdussammed P. - Head of institution since 2005, provides academic & administrative leadership",
-  "computer science hod":"💻 HOD: Hari C M",
-  "computer science faculty":"Nandaja P.R, Gopalakrishnan U K, Sarathlal S K, Aswathy K P, Ranjusha M",
-  "commerce hod":"🧑‍🏫 HOD: Surya V S",
-  "commerce faculty":"Deekshith M G, Jamsheera Oravil, Anjusree, Athira K, Anjali V Nair",
-  "electronics hod":"🔌 HOD: Silja M.S",
-  "electronics faculty":"Nayana K, Mintu E M, Mohammed Mustafa K C",
-  "general department faculty":"Aswathy B, Ranila O.P, Bindhu A K, Ranya K.V, Bindhu K",
-  "admin staff":"Senior Office Assistant: Ms. Asharaf Tharammal, Office Assistant: Kum. Advaitha M, LGS: Mr. Rasheed K V, Librarian: Mr. Hamzath Ali, Data Entry Operator: Ms. Beena K, PTS: Ms. Deepa, Ms. Bindhu, Ms. Jamsheena",
-  "facilities":"Library, Computer labs, Electronics lab, Smart classrooms, Seminar hall, Sports facilities, Parking",
-  "student programs":"Job fairs, Technical & cultural fests, Seminars & workshops, Sports competitions, NSS camp, College magazine",
-  "clubs activities":"NSS, Women Development Cell, Anti-Ragging Cell, Grievance Cell, Placement Cell, IQAC, CS Association, Commerce Association, Electronics Association, Literary Club, Bhoomithra Sena, Health & Sports Club, Daksha, Mathematics Club, Tourism Club, IIC, Media Cell",
-  "important links":"IHRD: https://ihrd.ac.in, Calicut University Portal, IHRD Admission Portal, Online Results Portal, Scholarship & Fee Payment Portals",
-  "institution details":"Total research journals: ~10, New books added annually, Included under UGC Section 2(f), Not NAAC accredited yet"
+  "contact":"📞 0494-2689655 / 8547006802\n📧 casvattamkulam@ihrd.ac.in"
 };
 
-/* FIXED NORMALIZE FUNCTION */
 function normalize(text){
   return text.toLowerCase().replace(/\s+/g,"");
 }
@@ -141,7 +108,6 @@ function addMsg(text,cls){
   div.innerText=text;
   chatbox.appendChild(div);
   chatbox.scrollTop=chatbox.scrollHeight;
-  if(cls==="bot" && speakEnabled && allowSpeakFromNow){ speak(text); }
 }
 
 function getReply(q){
@@ -151,9 +117,6 @@ function getReply(q){
   if(["hi","hello","hey"].includes(text)){
     return "Hello! Welcome to College of Applied Science, Vattamkulam. How can I help you today?";
   }
-  if(text.includes("thank")){
-    return "You're welcome! Happy to help you 😊";
-  }
 
   for(let k in db){
     const key=normalize(k);
@@ -162,7 +125,7 @@ function getReply(q){
     }
   }
 
-  return "Please ensure that you entered the correct details or select Contact to get contact information.";
+  return "Sorry, I couldn’t understand that.\nPlease contact the college for further details.\n\n📞 Phone: 0494-2689655 / 8547006802  📧 Email: casvattamkulam@ihrd.ac.in";
 }
 
 sendBtn.onclick=()=>{
@@ -171,46 +134,6 @@ sendBtn.onclick=()=>{
   addMsg(text,"user");
   input.value="";
   setTimeout(()=>addMsg(getReply(text),"bot"),400);
-  suggestList.style.display="none";
-};
-
-document.querySelectorAll(".suggest").forEach(s=>{
-  s.onclick=()=>{input.value=s.dataset.q;sendBtn.click();}
-});
-
-input.oninput=()=>{
-  const v=input.value.toLowerCase();
-  if(!v){suggestList.style.display="none";return;}
-  suggestList.innerHTML="";
-  keywords.filter(k=>k.includes(v)).forEach(k=>{
-    const d=document.createElement("div");
-    d.className="suggest-item";
-    d.innerText=k;
-    d.onclick=()=>{input.value=k;sendBtn.click();}
-    suggestList.appendChild(d);
-  });
-  suggestList.style.display=suggestList.children.length?"block":"none";
-};
-
-const rec=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(rec){
-  const r=new rec();
-  r.onstart=()=>voiceWave.style.display="block";
-  r.onend=()=>voiceWave.style.display="none";
-  r.onresult=e=>input.value=e.results[0][0].transcript;
-  voiceBtn.onclick=()=>r.start();
-}
-
-function speak(text){
-  synth.cancel();
-  synth.speak(new SpeechSynthesisUtterance(text));
-}
-
-volumeBtn.onclick=function(){
-  speakEnabled=!speakEnabled;
-  this.classList.toggle("active");
-  if(speakEnabled) allowSpeakFromNow=true;
-  else synth.cancel();
 };
 </script>
 </div>
